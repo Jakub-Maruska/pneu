@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Storage - Tire Manager Pro</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="styles.css">
+    <meta name="theme-color" content="#10b981">
+</head>
+<body>
+    <div class="app-container">
+        <main class="main-content">
+            <div class="page-container">
+                <!-- Header -->
+                <div class="page-header storage-header">
+                    <div class="header-background"></div>
+                    <div class="header-content">
+                        <div class="header-info">
+                            <div class="header-icon-section">
+                                <div class="header-icon storage-icon">
+                                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                                        <polyline points="3.27,6.96 12,12.01 20.73,6.96"/>
+                                        <line x1="12" y1="22.08" x2="12" y2="12"/>
+                                    </svg>
+                                </div>
+                                <div class="header-text">
+                                    <h1>Tire Storage</h1>
+                                    <p>Inventory Management</p>
+                                </div>
+                            </div>
+                            <div class="header-stats">
+                                <div class="stat-item">
+                                    <div class="stat-dot available"></div>
+                                    <span id="availableCount">0 Available</span>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-dot assigned"></div>
+                                    <span id="assignedCount">0 Assigned</span>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="add-btn" id="addTireBtn">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="12" y1="5" x2="12" y2="19"/>
+                                <line x1="5" y1="12" x2="19" y2="12"/>
+                            </svg>
+                            Add Tire
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Available Tires Section -->
+                <div class="section">
+                    <div class="section-header">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/>
+                        </svg>
+                        <h2>Available Tires</h2>
+                    </div>
+                    <div id="availableTires" class="tire-grid"></div>
+                </div>
+
+                <!-- Assigned Tires Section -->
+                <div class="section" id="assignedSection" style="display: none;">
+                    <div class="section-header">
+                        <div class="stat-dot assigned"></div>
+                        <h2>Assigned Tires</h2>
+                    </div>
+                    <div id="assignedTires" class="tire-grid"></div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Bottom Navigation -->
+        <nav class="bottom-nav">
+            <a href="truck.html" class="nav-item">
+                <div class="nav-icon truck-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/>
+                        <path d="M15 18H9"/>
+                        <path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14"/>
+                        <circle cx="17" cy="18" r="2"/>
+                        <circle cx="7" cy="18" r="2"/>
+                    </svg>
+                </div>
+                <span>Trucks</span>
+            </a>
+            <a href="storage.html" class="nav-item active">
+                <div class="nav-icon storage-icon active">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                        <polyline points="3.27,6.96 12,12.01 20.73,6.96"/>
+                        <line x1="12" y1="22.08" x2="12" y2="12"/>
+                    </svg>
+                </div>
+                <span>Storage</span>
+            </a>
+            <a href="trailer.html" class="nav-item">
+                <div class="nav-icon trailer-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/>
+                        <path d="M15 18H9"/>
+                        <path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14"/>
+                        <circle cx="17" cy="18" r="2"/>
+                        <circle cx="7" cy="18" r="2"/>
+                    </svg>
+                </div>
+                <span>Trailers</span>
+            </a>
+        </nav>
+    </div>
+
+    <!-- Add/Edit Tire Modal -->
+    <div id="tireModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">Add New Tire</h3>
+                <button class="close-btn" id="closeModal">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"/>
+                        <line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+            <form id="tireForm">
+                <div class="form-group">
+                    <label for="tireBrand">Brand Name</label>
+                    <input type="text" id="tireBrand" placeholder="e.g., Michelin" required>
+                </div>
+                <div class="form-group">
+                    <label for="tireType">Brand Type</label>
+                    <input type="text" id="tireType" placeholder="e.g., XDA2" required>
+                </div>
+                <div class="form-group">
+                    <label for="tireSize">Size</label>
+                    <input type="text" id="tireSize" placeholder="e.g., 355/50 R22.5" required>
+                </div>
+                <button type="submit" class="submit-btn">
+                    <span id="submitText">Add Tire</span>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script src="storage.js"></script>
+</body>
+</html>
