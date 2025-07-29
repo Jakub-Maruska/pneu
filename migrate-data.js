@@ -8,14 +8,14 @@
 
 const sampleData = {
   tires: [
-    { id: "R2V83292", brand: "Michelin", type: "XDA2", size: "355/50 R22.5", status: "available", dot: "2022", km: 0 },
-    { id: "R2V83252", brand: "Michelin", type: "XDA2", size: "355/50 R22.5", status: "available", dot: "2022", km: 0 },
-    { id: "R2V8XXXXX", brand: "Michelin", type: "XDA2", size: "355/50 R22.5", status: "available", dot: "2022", km: 0 },
-    { id: "B4K92847", brand: "Bridgestone", type: "M729", size: "295/75 R22.5", status: "assigned", dot: "2021", km: 0 },
-    { id: "G7H38291", brand: "Goodyear", type: "G159", size: "385/65 R22.5", status: "available", dot: "2023", km: 0 },
-    { id: "K9L47382", brand: "Continental", type: "HSC1", size: "315/70 R22.5", status: "available", dot: "2022", km: 0 },
-    { id: "M3N84729", brand: "Pirelli", type: "TH01", size: "385/55 R22.5", status: "available", dot: "2022", km: 0 },
-    { id: "P7Q92847", brand: "Yokohama", type: "104ZR", size: "295/80 R22.5", status: "assigned", dot: "2020", km: 0 },
+    { customId: "R2V83292", brand: "Michelin", type: "XDA2", size: "355/50 R22.5", status: "available", dot: "2022", km: 0 },
+    { customId: "R2V83252", brand: "Michelin", type: "XDA2", size: "355/50 R22.5", status: "available", dot: "2022", km: 0 },
+    { customId: "R2V8XXXXX", brand: "Michelin", type: "XDA2", size: "355/50 R22.5", status: "available", dot: "2022", km: 0 },
+    { customId: "B4K92847", brand: "Bridgestone", type: "M729", size: "295/75 R22.5", status: "assigned", dot: "2021", km: 0 },
+    { customId: "G7H38291", brand: "Goodyear", type: "G159", size: "385/65 R22.5", status: "available", dot: "2023", km: 0 },
+    { customId: "K9L47382", brand: "Continental", type: "HSC1", size: "315/70 R22.5", status: "available", dot: "2022", km: 0 },
+    { customId: "M3N84729", brand: "Pirelli", type: "TH01", size: "385/55 R22.5", status: "available", dot: "2022", km: 0 },
+    { customId: "P7Q92847", brand: "Yokohama", type: "104ZR", size: "295/80 R22.5", status: "assigned", dot: "2020", km: 0 },
   ],
   
   trucks: [
@@ -40,7 +40,7 @@ async function migrateData() {
     console.log('Migrujem pneumatiky...');
     for (const tire of sampleData.tires) {
       await DatabaseService.addTire(tire);
-      console.log(`Pridaná pneumatika: ${tire.id}`);
+      console.log(`Pridaná pneumatika: ${tire.customId}`);
     }
     
     // Migrate trucks

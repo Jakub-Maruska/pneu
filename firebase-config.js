@@ -19,7 +19,14 @@ const DatabaseService = {
   async getTires() {
     try {
       const snapshot = await db.collection('tires').get();
-      return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      return snapshot.docs.map(doc => {
+        const data = doc.data();
+        return { 
+          id: doc.id, // Firebase document ID
+          customId: data.customId || data.id, // Custom ID alebo fallback na staré id
+          ...data 
+        };
+      });
     } catch (error) {
       console.error('Error getting tires:', error);
       return [];
@@ -29,7 +36,11 @@ const DatabaseService = {
   async addTire(tire) {
     try {
       const docRef = await db.collection('tires').add(tire);
-      return { id: docRef.id, ...tire };
+      return { 
+        id: docRef.id, // Firebase document ID
+        customId: tire.customId, // Custom ID
+        ...tire 
+      };
     } catch (error) {
       console.error('Error adding tire:', error);
       throw error;

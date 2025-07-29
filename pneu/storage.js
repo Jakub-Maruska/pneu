@@ -11,6 +11,11 @@ async function loadTires() {
   try {
     tires = await DatabaseService.getTires()
     console.log('Loaded tires:', tires)
+    if (tires.length > 0) {
+      console.log('Sample tire structure:', tires[0])
+      console.log('Sample tire ID:', tires[0].id)
+      console.log('Sample tire customId:', tires[0].customId)
+    }
     renderTires()
     updateStats()
   } catch (error) {
@@ -122,6 +127,8 @@ async function handleSubmit(e) {
       }
       await DatabaseService.addTire(newTire)
     }
+    // Re-render po uložení
+    await loadTires()
     closeModalHandler()
   } catch (error) {
     console.error('Error saving tire:', error)
@@ -137,9 +144,16 @@ async function deleteTire(tireId) {
       const tire = tires.find(t => t.id === tireId)
       console.log('Found tire:', tire)
       
-      // tireId je už Firebase document ID
-      await DatabaseService.deleteTire(tireId)
-      console.log('Tire deleted successfully')
+      if (tire) {
+        // tireId je už Firebase document ID
+        await DatabaseService.deleteTire(tireId)
+        console.log('Tire deleted successfully')
+        // Re-render po mazaní
+        await loadTires()
+      } else {
+        console.error('Tire not found for deletion')
+        alert('Pneumatika nebola nájdená.')
+      }
     } catch (error) {
       console.error('Error deleting tire:', error)
       alert('Chyba pri mazaní pneumatiky. Skúste to znova.')
@@ -383,10 +397,13 @@ window.deleteTireFromGroup = function(tireId) {
     // Zatvor detail modal pred mazaním
     groupDetailModal.classList.remove('active')
     // Krátky timeout aby sa modal zatvoril
-    setTimeout(() => {
+    setTimeout(async () => {
       // Použijeme Firebase document ID pre mazanie
-      deleteTire(tire.id)
+      await deleteTire(tire.id)
     }, 100)
+  } else {
+    console.error('Tire not found for deletion:', tireId)
+    alert('Pneumatika nebola nájdená.')
   }
 }
 closeGroupDetailModal.addEventListener("click", () => {
