@@ -22,12 +22,12 @@ const tires = JSON.parse(localStorage.getItem("tires") || "[]")
 const truckSlots = JSON.parse(
   localStorage.getItem(`truck_${truckId}_slots`) ||
     JSON.stringify([
-      { id: "front-left", position: "Front Left", category: "front", tire: null },
-      { id: "front-right", position: "Front Right", category: "front", tire: null },
-      { id: "rear-left-outer", position: "Rear Left Outer", category: "rear", tire: null },
-      { id: "rear-left-inner", position: "Rear Left Inner", category: "rear", tire: null },
-      { id: "rear-right-outer", position: "Rear Right Outer", category: "rear", tire: null },
-      { id: "rear-right-inner", position: "Rear Right Inner", category: "rear", tire: null },
+      { id: "front-left", position: "Predné ľavé", category: "front", tire: null },
+      { id: "front-right", position: "Predné pravé", category: "front", tire: null },
+      { id: "rear-left-outer", position: "Zadné ľavé vonkajšie", category: "rear", tire: null },
+      { id: "rear-left-inner", position: "Zadné ľavé vnútorné", category: "rear", tire: null },
+      { id: "rear-right-outer", position: "Zadné pravé vonkajšie", category: "rear", tire: null },
+      { id: "rear-right-inner", position: "Zadné pravé vnútorné", category: "rear", tire: null },
     ]),
 )
 
@@ -84,7 +84,7 @@ function createSlotCard(slot) {
                 `
                     : `
                     <div class="empty-slot">
-                        <div class="empty-slot-text">Empty Slot</div>
+                        <div class="empty-slot-text">Prázdny slot</div>
                     </div>
                 `
                 }
@@ -97,7 +97,7 @@ function createSlotCard(slot) {
                         <line x1="18" y1="6" x2="6" y2="18"/>
                         <line x1="6" y1="6" x2="18" y2="18"/>
                     </svg>
-                    Remove
+                    Odobrať
                 </button>
             `
                 : `
@@ -106,7 +106,7 @@ function createSlotCard(slot) {
                         <line x1="12" y1="5" x2="12" y2="19"/>
                         <line x1="5" y1="12" x2="19" y2="12"/>
                     </svg>
-                    Assign
+                    Priradiť
                 </button>
             `
             }

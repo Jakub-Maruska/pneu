@@ -14,21 +14,35 @@ const trailers = {
   3: { licensePlate: "HJ456NM" },
 }
 
-// Load tires from localStorage
-const tires = JSON.parse(localStorage.getItem("tires") || "[]")
+// Global variables
+let tires = []
+let trailerSlots = [
+  { id: "left-front", position: "Ľavé predné", tire: null },
+  { id: "left-middle", position: "Ľavé stredné", tire: null },
+  { id: "left-rear", position: "Ľavé zadné", tire: null },
+  { id: "right-front", position: "Pravé predné", tire: null },
+  { id: "right-middle", position: "Pravé stredné", tire: null },
+  { id: "right-rear", position: "Pravé zadné", tire: null },
+]
 
-// Tire slots for this trailer
-const trailerSlots = JSON.parse(
-  localStorage.getItem(`trailer_${trailerId}_slots`) ||
-    JSON.stringify([
-      { id: "left-front", position: "Left Front", tire: null },
-      { id: "left-middle", position: "Left Middle", tire: null },
-      { id: "left-rear", position: "Left Rear", tire: null },
-      { id: "right-front", position: "Right Front", tire: null },
-      { id: "right-middle", position: "Right Middle", tire: null },
-      { id: "right-rear", position: "Right Rear", tire: null },
-    ]),
-)
+// Load data from database
+async function loadData() {
+  try {
+    // Load tires
+    tires = await DatabaseService.getTires()
+    
+    // Load trailer slots
+    const savedSlots = await DatabaseService.getTireSlots('trailer', trailerId)
+    if (savedSlots.length > 0) {
+      trailerSlots = savedSlots
+    }
+    
+    renderSlots()
+    updateStatus()
+  } catch (error) {
+    console.error('Error loading data:', error)
+  }
+}
 
 let currentSlot = null
 
@@ -43,11 +57,15 @@ const assignModalTitle = document.getElementById("assignModalTitle")
 const tireSelection = document.getElementById("tireSelection")
 
 // Initialize
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
   if (trailers[trailerId]) {
     trailerPlate.textContent = trailers[trailerId].licensePlate
-    renderSlots()
-    updateStatus()
+    await loadData()
+    
+    // Set up real-time listeners
+    DatabaseService.onTiresUpdate((updatedTires) => {
+      tires = updatedTires
+    })
   } else {
     window.location.href = "trailer.html"
   }
@@ -78,7 +96,7 @@ function createSlotCard(slot) {
                 `
                     : `
                     <div class="empty-slot">
-                        <div class="empty-slot-text">Empty Slot</div>
+                        <div class="empty-slot-text">Prázdny slot</div>
                     </div>
                 `
                 }
@@ -139,48 +157,56 @@ function closeAssignModalHandler() {
   currentSlot = null
 }
 
-function assignTire(slotId, tireId) {
+async function assignTire(slotId, tireId) {
   const tire = tires.find((t) => t.id === tireId)
   const slotIndex = trailerSlots.findIndex((s) => s.id === slotId)
 
   if (tire && slotIndex !== -1) {
-    // Update tire status
-    tire.status = "assigned"
+    try {
+      // Update tire status
+      await DatabaseService.updateTire(tire.id, { status: "assigned" })
 
-    // Assign tire to slot
-    trailerSlots[slotIndex].tire = tire
+      // Assign tire to slot
+      trailerSlots[slotIndex].tire = tire
 
-    // Save data
-    localStorage.setItem("tires", JSON.stringify(tires))
-    localStorage.setItem(`trailer_${trailerId}_slots`, JSON.stringify(trailerSlots))
+      // Save slots to database
+      await DatabaseService.updateTireSlots('trailer', trailerId, trailerSlots)
 
-    // Re-render
-    renderSlots()
-    updateStatus()
-    closeAssignModalHandler()
+      // Re-render
+      renderSlots()
+      updateStatus()
+      closeAssignModalHandler()
+    } catch (error) {
+      console.error('Error assigning tire:', error)
+      alert('Error assigning tire. Please try again.')
+    }
   }
 }
 
-function removeTire(slotId) {
+async function removeTire(slotId) {
   const slotIndex = trailerSlots.findIndex((s) => s.id === slotId)
 
   if (slotIndex !== -1 && trailerSlots[slotIndex].tire) {
-    // Update tire status back to available
-    const tire = tires.find((t) => t.id === trailerSlots[slotIndex].tire.id)
-    if (tire) {
-      tire.status = "available"
+    try {
+      // Update tire status back to available
+      const tire = tires.find((t) => t.id === trailerSlots[slotIndex].tire.id)
+      if (tire) {
+        await DatabaseService.updateTire(tire.id, { status: "available" })
+      }
+
+      // Remove tire from slot
+      trailerSlots[slotIndex].tire = null
+
+      // Save slots to database
+      await DatabaseService.updateTireSlots('trailer', trailerId, trailerSlots)
+
+      // Re-render
+      renderSlots()
+      updateStatus()
+    } catch (error) {
+      console.error('Error removing tire:', error)
+      alert('Error removing tire. Please try again.')
     }
-
-    // Remove tire from slot
-    trailerSlots[slotIndex].tire = null
-
-    // Save data
-    localStorage.setItem("tires", JSON.stringify(tires))
-    localStorage.setItem(`trailer_${trailerId}_slots`, JSON.stringify(trailerSlots))
-
-    // Re-render
-    renderSlots()
-    updateStatus()
   }
 }
 

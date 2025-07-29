@@ -1,7 +1,7 @@
 {
-  "name": "Tire Manager Pro",
-  "short_name": "TireManager",
-  "description": "Professional tire management system for fleet operations",
+  "name": "Správca Pneumatík Pro",
+  "short_name": "SprávcaPneumatík",
+  "description": "Profesionálny systém správy pneumatík pre flotily",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",

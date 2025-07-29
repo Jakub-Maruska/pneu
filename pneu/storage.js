@@ -3,22 +3,21 @@ if (localStorage.getItem("isLoggedIn") !== "true") {
   window.location.href = "../index.html"
 }
 
-// Mock data
-let tires = [
-  { id: "R2V83292", brand: "Michelin", type: "XDA2", size: "355/50 R22.5", status: "available", dot: "2022", km: 0 },
-  { id: "R2V83252", brand: "Michelin", type: "XDA2", size: "355/50 R22.5", status: "available", dot: "2022", km: 0 },
-  { id: "R2V8XXXXX", brand: "Michelin", type: "XDA2", size: "355/50 R22.5", status: "available", dot: "2022", km: 0 },
-  { id: "B4K92847", brand: "Bridgestone", type: "M729", size: "295/75 R22.5", status: "assigned", dot: "2021", km: 0 },
-  { id: "G7H38291", brand: "Goodyear", type: "G159", size: "385/65 R22.5", status: "available", dot: "2023", km: 0 },
-  { id: "K9L47382", brand: "Continental", type: "HSC1", size: "315/70 R22.5", status: "available", dot: "2022", km: 0 },
-  { id: "M3N84729", brand: "Pirelli", type: "TH01", size: "385/55 R22.5", status: "available", dot: "2022", km: 0 },
-  { id: "P7Q92847", brand: "Yokohama", type: "104ZR", size: "295/80 R22.5", status: "assigned", dot: "2020", km: 0 },
-]
+// Global tires array
+let tires = []
 
-// Load data from localStorage if available
-const savedTires = localStorage.getItem("tires")
-if (savedTires) {
-  tires = JSON.parse(savedTires)
+// Load tires from database
+async function loadTires() {
+  try {
+    tires = await DatabaseService.getTires()
+    console.log('Loaded tires:', tires)
+    renderTires()
+    updateStats()
+  } catch (error) {
+    console.error('Error loading tires:', error)
+    // Fallback to empty array
+    tires = []
+  }
 }
 
 let editingTire = null
@@ -35,17 +34,21 @@ const closeModal = document.getElementById("closeModal")
 const tireForm = document.getElementById("tireForm")
 const modalTitle = document.getElementById("modalTitle")
 const submitText = document.getElementById("submitText")
-const filterName = document.getElementById("filterName")
-const filterSize = document.getElementById("filterSize")
-const filterId = document.getElementById("filterId")
+const filterSearch = document.getElementById("filterSearch")
 const groupDetailModal = document.getElementById("groupDetailModal")
 const closeGroupDetailModal = document.getElementById("closeGroupDetailModal")
 const groupDetailList = document.getElementById("groupDetailList")
 
 // Initialize
-document.addEventListener("DOMContentLoaded", () => {
-  renderTires()
-  updateStats()
+document.addEventListener("DOMContentLoaded", async () => {
+  await loadTires()
+  
+  // Set up real-time listener for tire updates
+  DatabaseService.onTiresUpdate((updatedTires) => {
+    tires = updatedTires
+    renderTires()
+    updateStats()
+  })
 })
 
 // Event listeners
@@ -54,25 +57,23 @@ closeModal.addEventListener("click", () => closeModalHandler())
 tireForm.addEventListener("submit", handleSubmit)
 
 // Filter listeners
-filterName.addEventListener("input", renderTires)
-filterSize.addEventListener("input", renderTires)
-filterId.addEventListener("input", renderTires)
+filterSearch.addEventListener("input", renderTires)
 
 // Modal handlers
 function openModal(tire = null) {
   editingTire = tire
   if (tire) {
-    modalTitle.textContent = "Edit Tire"
-    submitText.textContent = "Update Tire"
+    modalTitle.textContent = "Upraviť pneumatiku"
+    submitText.textContent = "Aktualizovať pneumatiku"
     document.getElementById("tireBrand").value = tire.brand
     document.getElementById("tireType").value = tire.type
     document.getElementById("tireSize").value = tire.size
-    document.getElementById("tireId").value = tire.id
+    document.getElementById("tireId").value = tire.customId || tire.id
     document.getElementById("tireDot").value = tire.dot || ""
     document.getElementById("tireKm").value = tire.km ?? 0
   } else {
-    modalTitle.textContent = "Add New Tire"
-    submitText.textContent = "Add Tire"
+    modalTitle.textContent = "Pridať novú pneumatiku"
+    submitText.textContent = "Pridať pneumatiku"
     tireForm.reset()
     document.getElementById("tireKm").value = "0"
   }
@@ -85,7 +86,7 @@ function closeModalHandler() {
   tireForm.reset()
 }
 
-function handleSubmit(e) {
+async function handleSubmit(e) {
   e.preventDefault()
   const brand = document.getElementById("tireBrand").value
   const type = document.getElementById("tireType").value
@@ -98,47 +99,51 @@ function handleSubmit(e) {
   size = formatTireSize(size)
   document.getElementById("tireSize").value = size
 
-  if (editingTire) {
-    // Update existing tire
-    const index = tires.findIndex((t) => t.id === editingTire.id)
-    if (index !== -1) {
-      // Ak sa zmení brand/type/size, re-renderuj skupiny
-      const oldKey = `${tires[index].brand}|${tires[index].type}|${tires[index].size}`
-      tires[index] = { ...tires[index], brand, type, size, id, dot, km }
-      const newKey = `${brand}|${type}|${size}`
-      if (oldKey !== newKey) {
-        saveTires()
-        renderTires()
-        updateStats()
-        closeModalHandler()
-        return
+  try {
+    if (editingTire) {
+      console.log('Updating tire:', editingTire)
+      console.log('Update data:', { brand, type, size, id, dot, km })
+      // Update existing tire - editingTire.id je Firebase document ID
+      await DatabaseService.updateTire(editingTire.id, {
+        customId: id, // Uložíme custom ID ako customId
+        brand, type, size, dot, km
+      })
+      console.log('Tire updated successfully')
+    } else {
+      // Add new tire
+      const newTire = {
+        customId: id, // Uložíme custom ID ako customId
+        brand,
+        type,
+        size,
+        status: "available",
+        dot,
+        km,
       }
+      await DatabaseService.addTire(newTire)
     }
-  } else {
-    // Add new tire
-    const newTire = {
-      id,
-      brand,
-      type,
-      size,
-      status: "available",
-      dot,
-      km,
-    }
-    tires.push(newTire)
+    closeModalHandler()
+  } catch (error) {
+    console.error('Error saving tire:', error)
+    alert('Chyba pri ukladaní pneumatiky. Skúste to znova.')
   }
-  saveTires()
-  renderTires()
-  updateStats()
-  closeModalHandler()
 }
 
-function deleteTire(id) {
-  if (confirm("Are you sure you want to delete this tire?")) {
-    tires = tires.filter((t) => t.id !== id)
-    saveTires()
-    renderTires()
-    updateStats()
+async function deleteTire(tireId) {
+  if (confirm("Ste si istí, že chcete vymazať túto pneumatiku?")) {
+    try {
+      console.log('Attempting to delete tire with ID:', tireId)
+      console.log('Available tires:', tires)
+      const tire = tires.find(t => t.id === tireId)
+      console.log('Found tire:', tire)
+      
+      // tireId je už Firebase document ID
+      await DatabaseService.deleteTire(tireId)
+      console.log('Tire deleted successfully')
+    } catch (error) {
+      console.error('Error deleting tire:', error)
+      alert('Chyba pri mazaní pneumatiky. Skúste to znova.')
+    }
   }
 }
 
@@ -147,25 +152,25 @@ function renderTires() {
   let availableTires = tires.filter((t) => t.status === "available")
   let assignedTires = tires.filter((t) => t.status === "assigned")
 
-  const nameVal = filterName.value.trim().toLowerCase()
-  const sizeVal = filterSize.value.trim().toLowerCase()
-  const idVal = filterId.value.trim().toLowerCase()
+  const searchVal = filterSearch.value.trim().toLowerCase()
 
-  if (nameVal) {
-    availableTires = availableTires.filter(
-      (t) => t.brand.toLowerCase().includes(nameVal) || t.type.toLowerCase().includes(nameVal)
+  if (searchVal) {
+    availableTires = availableTires.filter((t) => 
+      t.brand.toLowerCase().includes(searchVal) || 
+      t.type.toLowerCase().includes(searchVal) ||
+      t.size.toLowerCase().includes(searchVal) ||
+      (t.customId && t.customId.toLowerCase().includes(searchVal)) ||
+      (t.id && t.id.toLowerCase().includes(searchVal)) ||
+      (t.dot && t.dot.toLowerCase().includes(searchVal))
     )
-    assignedTires = assignedTires.filter(
-      (t) => t.brand.toLowerCase().includes(nameVal) || t.type.toLowerCase().includes(nameVal)
+    assignedTires = assignedTires.filter((t) => 
+      t.brand.toLowerCase().includes(searchVal) || 
+      t.type.toLowerCase().includes(searchVal) ||
+      t.size.toLowerCase().includes(searchVal) ||
+      (t.customId && t.customId.toLowerCase().includes(searchVal)) ||
+      (t.id && t.id.toLowerCase().includes(searchVal)) ||
+      (t.dot && t.dot.toLowerCase().includes(searchVal))
     )
-  }
-  if (sizeVal) {
-    availableTires = availableTires.filter((t) => t.size.toLowerCase().includes(sizeVal))
-    assignedTires = assignedTires.filter((t) => t.size.toLowerCase().includes(sizeVal))
-  }
-  if (idVal) {
-    availableTires = availableTires.filter((t) => t.id.toLowerCase().includes(idVal))
-    assignedTires = assignedTires.filter((t) => t.id.toLowerCase().includes(idVal))
   }
 
   // Grouping available tires (always group, even if only 1)
@@ -186,11 +191,10 @@ function renderTires() {
             <div class="tire-info">
               <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
                 <h3>${tire.brand} ${tire.type}</h3>
-                <span class="status-badge-small status-available">skladom</span>
               </div>
               <p>${tire.size}</p>
             </div>
-            <span class="tire-id" style="align-self: flex-start; margin-left: 1rem;">${group.length} ks</span>
+            <span class="tire-count status-available" style="align-self: flex-start; margin-left: 1rem;">${group.length} ks</span>
           </div>
         </div>
       `
@@ -213,12 +217,9 @@ function createTireCard(tire) {
                 <div class="tire-info">
                     <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
                         <h3>${tire.brand} ${tire.type}</h3>
-                        <span class="status-badge-small ${tire.status === "available" ? "status-available" : "status-assigned"}">
-                            ${tire.status}
-                        </span>
                     </div>
                     <p>${tire.size}</p>
-                    <span class="tire-id">ID: ${tire.id}</span><br>
+                    <span class="tire-id">ID: ${tire.customId || tire.id}</span><br>
                     <span class="tire-id">DOT: ${tire.dot || "-"}</span><br>
                     <span class="tire-id">Najazdené km: ${tire.km ?? 0}</span>
                 </div>
@@ -247,13 +248,11 @@ function updateStats() {
   const available = tires.filter((t) => t.status === "available").length
   const assigned = tires.filter((t) => t.status === "assigned").length
 
-  availableCount.textContent = `${available} Available`
-  assignedCount.textContent = `${assigned} Assigned`
+  availableCount.textContent = `${available} Dostupné`
+  assignedCount.textContent = `${assigned} Priradené`
 }
 
-function saveTires() {
-  localStorage.setItem("tires", JSON.stringify(tires))
-}
+// Remove saveTires function as it's no longer needed with Firebase
 
 // Group detail logic
 window.showGroupDetail = function (key) {
@@ -273,15 +272,14 @@ window.showGroupDetail = function (key) {
   }
   groupDetailList.innerHTML = `
     <div class="group-header-box">
-      <div style="display:flex; align-items:center; gap:0.75rem; margin-bottom:0.5rem;">
-        <span class="group-header-icon">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
-        </span>
-        <span style="font-weight:700; font-size:1.15rem;">${brand} ${type}</span>
-      </div>
-      <div style="display:flex; gap:2rem; align-items:center;">
-        <span>Rozmer: <span class="group-size-main">${sizeMain}</span><br><span class="group-size-r">${sizeR}</span> <span class="group-size-num">${sizeNum}</span></span>
-        <span>Počet kusov: <span class="badge badge-count">${group.length} ks</span></span>
+      <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+        <div>
+          <div style="margin-bottom:0.5rem;">
+            <span style="font-weight:700; font-size:1.15rem;">${brand} ${type}</span>
+          </div>
+          <div style="color:#6b7280; font-size:0.875rem;">${sizeMain} ${sizeR} ${sizeNum}</div>
+        </div>
+        <span class="badge badge-count">${group.length} ks</span>
       </div>
     </div>
     <div class="group-table-box">
@@ -314,7 +312,7 @@ function renderGroupTable(group) {
           .map(
             (t) => `
               <tr>
-                <td>${t.id}</td>
+                <td>${t.customId || t.id}</td>
                 <td><span class="badge badge-dot">${t.dot || "-"}</span></td>
                 <td>${t.km ?? 0} km</td>
               </tr>
@@ -333,12 +331,12 @@ function renderGroupMobileList(group) {
         .map(
           (t) => `
             <div class="group-mobile-card">
-              <div class="group-mobile-row"><span class="group-mobile-label">ID:</span> <span class="group-mobile-id">${t.id}</span></div>
+              <div class="group-mobile-row"><span class="group-mobile-label">ID:</span> <span class="group-mobile-id">${t.customId || t.id}</span></div>
               <div class="group-mobile-row"><span class="group-mobile-label">DOT:</span> <span class="group-mobile-dot">${t.dot || "-"}</span></div>
               <div class="group-mobile-row"><span class="group-mobile-label">Najazdené km:</span> <span class="group-mobile-km">${formatKm(t.km ?? 0)} km</span></div>
               <div class="group-mobile-actions">
-                <button class="group-mobile-btn edit" onclick="editTireFromGroup('${t.id}')">Upraviť</button>
-                <button class="group-mobile-btn delete" onclick="deleteTireFromGroup('${t.id}')">Vymazať</button>
+                <button class="group-mobile-btn edit" onclick="editTireFromGroup('${t.customId || t.id}')">Upraviť</button>
+                <button class="group-mobile-btn delete" onclick="deleteTireFromGroup('${t.customId || t.id}')">Vymazať</button>
               </div>
             </div>
           `
@@ -359,27 +357,37 @@ function renderTireStatusBadge(t) {
   return '<span class="badge badge-status">Neznámy</span>'
 }
 
-window.editTireFromGroup = function(id) {
-  const tire = tires.find(t => t.id === id)
+window.editTireFromGroup = function(tireId) {
+  console.log('editTireFromGroup called with tireId:', tireId)
+  console.log('Available tires:', tires)
+  // tireId je custom ID (napr. "R2V83292"), nie Firebase document ID
+  const tire = tires.find(t => t.customId === tireId)
+  console.log('Found tire:', tire)
   if (tire) {
-    openModal(tire)
-    // Po zatvorení modalu re-renderuj group detail
-    tireModal.addEventListener('transitionend', function handler() {
-      if (!tireModal.classList.contains('active')) {
-        showGroupDetail(encodeURIComponent(`${tire.brand}|${tire.type}|${tire.size}`))
-        tireModal.removeEventListener('transitionend', handler)
-      }
-    })
+    // Zatvor detail modal pred otvorením edit modalu
+    groupDetailModal.classList.remove('active')
+    // Krátky timeout aby sa modal zatvoril
+    setTimeout(() => {
+      openModal(tire)
+    }, 100)
   }
 }
 
-window.deleteTireFromGroup = function(id) {
-  deleteTire(id)
-  // Po vymazaní re-renderuj group detail (nájde novú skupinu alebo zavrie modal ak skupina zmizla)
-  setTimeout(() => {
-    renderTires()
+window.deleteTireFromGroup = function(tireId) {
+  console.log('deleteTireFromGroup called with tireId:', tireId)
+  // tireId je custom ID (napr. "R2V83292"), nie Firebase document ID
+  const tire = tires.find(t => t.customId === tireId)
+  console.log('Found tire for deletion:', tire)
+  
+  if (tire) {
+    // Zatvor detail modal pred mazaním
     groupDetailModal.classList.remove('active')
-  }, 100)
+    // Krátky timeout aby sa modal zatvoril
+    setTimeout(() => {
+      // Použijeme Firebase document ID pre mazanie
+      deleteTire(tire.id)
+    }, 100)
+  }
 }
 closeGroupDetailModal.addEventListener("click", () => {
   groupDetailModal.classList.remove("active")

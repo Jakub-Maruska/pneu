@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trailers - Tire Manager Pro</title>
+    <title>Prívesy - Správca Pneumatík Pro</title>
     <link rel="manifest" href="../manifest.json">
     <link rel="stylesheet" href="../styles.css">
     <meta name="theme-color" content="#10b981">
@@ -28,18 +28,18 @@
                                     </svg>
                                 </div>
                                 <div class="header-text">
-                                    <h1>Trailer Fleet</h1>
-                                    <p>Trailer Management</p>
+                                    <h1>Flotila prívesov</h1>
+                                    <p>Správa prívesov</p>
                                 </div>
                             </div>
                             <div class="header-stats">
                                 <div class="stat-item">
                                     <div class="stat-dot available"></div>
-                                    <span>2 Active</span>
+                                    <span>2 Aktívne</span>
                                 </div>
                                 <div class="stat-item">
                                     <div class="stat-dot assigned"></div>
-                                    <span>1 Maintenance</span>
+                                    <span>1 Údržba</span>
                                 </div>
                             </div>
                         </div>
@@ -63,7 +63,7 @@
                         <circle cx="7" cy="18" r="2"/>
                     </svg>
                 </div>
-                <span>Trucks</span>
+                <span>Nákladné autá</span>
             </a>
             <a href="storage.html" class="nav-item">
                 <div class="nav-icon storage-icon">
@@ -73,7 +73,7 @@
                         <line x1="12" y1="22.08" x2="12" y2="12"/>
                     </svg>
                 </div>
-                <span>Storage</span>
+                <span>Sklad</span>
             </a>
             <a href="trailer.html" class="nav-item active">
                 <div class="nav-icon trailer-icon active">
@@ -85,11 +85,15 @@
                         <circle cx="7" cy="18" r="2"/>
                     </svg>
                 </div>
-                <span>Trailers</span>
+                <span>Prívesy</span>
             </a>
         </nav>
     </div>
 
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
+    <script src="../firebase-config.js"></script>
     <script src="trailer.js"></script>
 </body>
 </html>

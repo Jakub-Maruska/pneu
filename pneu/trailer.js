@@ -3,19 +3,33 @@ if (localStorage.getItem("isLoggedIn") !== "true") {
   window.location.href = "../index.html"
 }
 
-// Mock trailer data
-const trailers = [
-  { id: "1", licensePlate: "ZC375YC", status: "active", tiresAssigned: 6, totalTires: 6 },
-  { id: "2", licensePlate: "TR892KL", status: "maintenance", tiresAssigned: 3, totalTires: 6 },
-  { id: "3", licensePlate: "HJ456NM", status: "active", tiresAssigned: 6, totalTires: 6 },
-]
+// Global trailers array
+let trailers = []
 
 // DOM elements
 const trailerGrid = document.getElementById("trailerGrid")
 
+// Load trailers from database
+async function loadTrailers() {
+  try {
+    trailers = await DatabaseService.getTrailers()
+    renderTrailers()
+  } catch (error) {
+    console.error('Error loading trailers:', error)
+    // Fallback to empty array
+    trailers = []
+  }
+}
+
 // Initialize
-document.addEventListener("DOMContentLoaded", () => {
-  renderTrailers()
+document.addEventListener("DOMContentLoaded", async () => {
+  await loadTrailers()
+  
+  // Set up real-time listener for trailer updates
+  DatabaseService.onTrailersUpdate((updatedTrailers) => {
+    trailers = updatedTrailers
+    renderTrailers()
+  })
 })
 
 function renderTrailers() {
@@ -43,7 +57,7 @@ function createTrailerCard(trailer) {
                         <h3>${trailer.licensePlate}</h3>
                         <div class="vehicle-meta">
                             <span class="status-badge-small status-${trailer.status}">${trailer.status}</span>
-                            <span>${trailer.tiresAssigned}/${trailer.totalTires} tires</span>
+                            <span>${trailer.tiresAssigned}/${trailer.totalTires} pneumatík</span>
                         </div>
                     </div>
                 </div>
@@ -59,7 +73,7 @@ function createTrailerCard(trailer) {
             </div>
             <div class="progress-bar">
                 <div class="progress-info">
-                    <span>Tire Status</span>
+                    <span>Stav pneumatík</span>
                     <span>${percentage}%</span>
                 </div>
                 <div class="progress-track">

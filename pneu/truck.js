@@ -3,20 +3,33 @@ if (localStorage.getItem("isLoggedIn") !== "true") {
   window.location.href = "../index.html"
 }
 
-// Mock truck data
-const trucks = [
-  { id: "1", licensePlate: "ZC153BL", status: "active", tiresAssigned: 6, totalTires: 6 },
-  { id: "2", licensePlate: "AB789CD", status: "maintenance", tiresAssigned: 4, totalTires: 6 },
-  { id: "3", licensePlate: "XY456EF", status: "active", tiresAssigned: 6, totalTires: 6 },
-  { id: "4", licensePlate: "MN123GH", status: "inactive", tiresAssigned: 2, totalTires: 6 },
-]
+// Global trucks array
+let trucks = []
 
 // DOM elements
 const truckGrid = document.getElementById("truckGrid")
 
+// Load trucks from database
+async function loadTrucks() {
+  try {
+    trucks = await DatabaseService.getTrucks()
+    renderTrucks()
+  } catch (error) {
+    console.error('Error loading trucks:', error)
+    // Fallback to empty array
+    trucks = []
+  }
+}
+
 // Initialize
-document.addEventListener("DOMContentLoaded", () => {
-  renderTrucks()
+document.addEventListener("DOMContentLoaded", async () => {
+  await loadTrucks()
+  
+  // Set up real-time listener for truck updates
+  DatabaseService.onTrucksUpdate((updatedTrucks) => {
+    trucks = updatedTrucks
+    renderTrucks()
+  })
 })
 
 function renderTrucks() {
@@ -44,7 +57,7 @@ function createTruckCard(truck) {
                         <h3>${truck.licensePlate}</h3>
                         <div class="vehicle-meta">
                             <span class="status-badge-small status-${truck.status}">${truck.status}</span>
-                            <span>${truck.tiresAssigned}/${truck.totalTires} tires</span>
+                            <span>${truck.tiresAssigned}/${truck.totalTires} pneumatík</span>
                         </div>
                     </div>
                 </div>
@@ -60,7 +73,7 @@ function createTruckCard(truck) {
             </div>
             <div class="progress-bar">
                 <div class="progress-info">
-                    <span>Tire Status</span>
+                    <span>Stav pneumatík</span>
                     <span>${percentage}%</span>
                 </div>
                 <div class="progress-track">

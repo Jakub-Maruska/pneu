@@ -489,6 +489,24 @@ body {
   border: 1px solid #fdba74;
 }
 
+/* Tire count with status colors */
+.tire-count {
+  padding: 0.25rem 0.75rem;
+  border-radius: 1rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.tire-count.status-available {
+  background: linear-gradient(135deg, #10b981, #059669);
+}
+
+.tire-count.status-assigned {
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+}
+
 /* Vehicle Cards */
 .vehicle-card-content {
   display: flex;
@@ -982,9 +1000,11 @@ body {
   margin-right: 0.25em;
 }
 .badge-count {
-  background: #e0f2fe;
-  color: #0284c7;
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
   font-size: 0.95em;
+  font-weight: 600;
+  box-shadow: 0 2px 4px rgba(16, 185, 129, 0.3);
 }
 .badge-dot {
   background: #dcfce7;

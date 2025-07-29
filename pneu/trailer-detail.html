@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trailer Detail - Tire Manager Pro</title>
+    <title>Detail prívesu - Správca Pneumatík Pro</title>
     <link rel="manifest" href="../manifest.json">
     <link rel="stylesheet" href="../styles.css">
     <meta name="theme-color" content="#10b981">
@@ -34,17 +34,17 @@
                                 </div>
                                 <div class="header-text">
                                     <h1 id="trailerPlate">ZC375YC</h1>
-                                    <p>Trailer Configuration</p>
+                                    <p>Konfigurácia prívesu</p>
                                 </div>
                             </div>
                             <div class="header-stats">
                                 <div class="stat-item">
                                     <div class="stat-dot available"></div>
-                                    <span id="assignedStatus">0/6 Assigned</span>
+                                    <span id="assignedStatus">0/6 Priradené</span>
                                 </div>
                             </div>
                         </div>
-                        <div class="status-badge" id="completionBadge">Incomplete</div>
+                        <div class="status-badge" id="completionBadge">Neúplné</div>
                     </div>
                 </div>
 
@@ -52,7 +52,7 @@
                 <div class="section">
                     <div class="section-header">
                         <div class="section-indicator trailer-indicator"></div>
-                        <h2>Trailer Tires</h2>
+                        <h2>Pneumatiky prívesu</h2>
                     </div>
                     <div class="tire-slots-grid" id="trailerTires"></div>
                 </div>
@@ -114,6 +114,10 @@
         </div>
     </div>
 
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
+    <script src="../firebase-config.js"></script>
     <script src="trailer-detail.js"></script>
 </body>
 </html>
