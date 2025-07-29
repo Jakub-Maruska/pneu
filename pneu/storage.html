@@ -51,6 +51,22 @@
                     </div>
                 </div>
 
+                <!-- Filter Section -->
+                <div class="section" id="filterSection" style="margin-bottom: 1.5rem;">
+                    <div class="form-group" style="margin-bottom: 0.5rem;">
+                        <label for="filterName">Názov alebo typ</label>
+                        <input type="text" id="filterName" placeholder="Zadajte názov alebo typ...">
+                    </div>
+                    <div class="form-group" style="margin-bottom: 0.5rem;">
+                        <label for="filterSize">Rozmer</label>
+                        <input type="text" id="filterSize" placeholder="napr. 315/70 R22,5">
+                    </div>
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label for="filterId">ID</label>
+                        <input type="text" id="filterId" placeholder="Zadajte ID...">
+                    </div>
+                </div>
+
                 <!-- Available Tires Section -->
                 <div class="section">
                     <div class="section-header">
@@ -135,12 +151,40 @@
                 </div>
                 <div class="form-group">
                     <label for="tireSize">Size</label>
-                    <input type="text" id="tireSize" placeholder="e.g., 355/50 R22.5" required>
+                    <input type="text" id="tireSize" inputmode="numeric" pattern="[0-9/ R,.]*" placeholder="e.g., 315/70 R22,5" required>
+                </div>
+                <div class="form-group">
+                    <label for="tireId">ID</label>
+                    <input type="text" id="tireId" placeholder="Unikátne ID" required>
+                </div>
+                <div class="form-group">
+                    <label for="tireDot">DOT (rok výroby)</label>
+                    <input type="text" id="tireDot" placeholder="napr. 2022" required>
+                </div>
+                <div class="form-group">
+                    <label for="tireKm">Najazdené km</label>
+                    <input type="number" id="tireKm" placeholder="napr. 0" min="0" value="0" required>
                 </div>
                 <button type="submit" class="submit-btn">
                     <span id="submitText">Add Tire</span>
                 </button>
             </form>
+        </div>
+    </div>
+
+    <!-- Group Detail Modal -->
+    <div id="groupDetailModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="groupDetailTitle">Detail skupiny pneumatík</h3>
+                <button class="close-btn" id="closeGroupDetailModal">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"/>
+                        <line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+            <div id="groupDetailList" style="padding: 1.5rem;"></div>
         </div>
     </div>
 

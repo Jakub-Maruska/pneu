@@ -71,7 +71,9 @@ function createSlotCard(slot) {
                     <div class="assigned-tire">
                         <p class="tire-brand">${slot.tire.brand} ${slot.tire.type}</p>
                         <p class="tire-size">${slot.tire.size}</p>
-                        <p class="tire-id">${slot.tire.id}</p>
+                        <p class="tire-id">ID: ${slot.tire.id}</p>
+                        <p class="tire-id">DOT: ${slot.tire.dot || '-'}</p>
+                        <p class="tire-id">Najazdené km: ${slot.tire.km ?? 0}</p>
                     </div>
                 `
                     : `
@@ -117,7 +119,8 @@ function openAssignModal(slotId) {
       (tire) => `
         <div class="tire-option" onclick="assignTire('${slotId}', '${tire.id}')">
             <div class="tire-option-header">${tire.brand} ${tire.type}</div>
-            <div class="tire-option-details">${tire.size} - ${tire.id}</div>
+            <div class="tire-option-details">${tire.size} - ID: ${tire.id}</div>
+            <div class="tire-option-details">DOT: ${tire.dot || '-'}, Najazdené km: ${tire.km ?? 0}</div>
         </div>
     `,
     )
