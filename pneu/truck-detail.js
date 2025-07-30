@@ -7,29 +7,56 @@ if (localStorage.getItem("isLoggedIn") !== "true") {
 const urlParams = new URLSearchParams(window.location.search)
 const truckId = urlParams.get("id")
 
-// Mock data
-const trucks = {
-  1: { licensePlate: "ZC153BL" },
-  2: { licensePlate: "AB789CD" },
-  3: { licensePlate: "XY456EF" },
-  4: { licensePlate: "MN123GH" },
+// Global variables
+let tires = []
+let truck = null
+let truckSlots = [
+  { id: "front-left", position: "Predné ľavé", category: "front", tire: null },
+  { id: "front-right", position: "Predné pravé", category: "front", tire: null },
+  { id: "rear-left-outer", position: "Zadné ľavé vonkajšie", category: "rear", tire: null },
+  { id: "rear-left-inner", position: "Zadné ľavé vnútorné", category: "rear", tire: null },
+  { id: "rear-right-outer", position: "Zadné pravé vonkajšie", category: "rear", tire: null },
+  { id: "rear-right-inner", position: "Zadné pravé vnútorné", category: "rear", tire: null },
+]
+
+// Load data from database
+async function loadData() {
+  try {
+    // Load truck data
+    const trucks = await DatabaseService.getTrucks()
+    truck = trucks.find(t => t.id === truckId)
+    
+    if (!truck) {
+      window.location.href = "truck.html"
+      return
+    }
+    
+    // Update truck plate display
+    truckPlate.textContent = truck.licensePlate
+    
+    // Load tires
+    tires = await DatabaseService.getTires()
+    
+    // Load truck slots
+    await loadTireSlots()
+    
+    renderSlots()
+    updateStatus()
+  } catch (error) {
+    console.error('Error loading data:', error)
+  }
 }
 
-// Load tires from localStorage
-const tires = JSON.parse(localStorage.getItem("tires") || "[]")
-
-// Tire slots for this truck
-const truckSlots = JSON.parse(
-  localStorage.getItem(`truck_${truckId}_slots`) ||
-    JSON.stringify([
-      { id: "front-left", position: "Predné ľavé", category: "front", tire: null },
-      { id: "front-right", position: "Predné pravé", category: "front", tire: null },
-      { id: "rear-left-outer", position: "Zadné ľavé vonkajšie", category: "rear", tire: null },
-      { id: "rear-left-inner", position: "Zadné ľavé vnútorné", category: "rear", tire: null },
-      { id: "rear-right-outer", position: "Zadné pravé vonkajšie", category: "rear", tire: null },
-      { id: "rear-right-inner", position: "Zadné pravé vnútorné", category: "rear", tire: null },
-    ]),
-)
+async function loadTireSlots() {
+  try {
+    const savedSlots = await DatabaseService.getTireSlots('truck', truckId)
+    if (savedSlots.length > 0) {
+      truckSlots = savedSlots
+    }
+  } catch (error) {
+    console.error('Error loading tire slots:', error)
+  }
+}
 
 let currentSlot = null
 
@@ -45,14 +72,31 @@ const assignModalTitle = document.getElementById("assignModalTitle")
 const tireSelection = document.getElementById("tireSelection")
 
 // Initialize
-document.addEventListener("DOMContentLoaded", () => {
-  if (trucks[truckId]) {
-    truckPlate.textContent = trucks[truckId].licensePlate
-    renderSlots()
-    updateStatus()
-  } else {
-    window.location.href = "truck.html"
-  }
+document.addEventListener("DOMContentLoaded", async () => {
+  await loadData()
+  
+  // Set up real-time listeners
+  DatabaseService.onTiresUpdate((updatedTires) => {
+    tires = updatedTires
+  })
+  
+  // Set up real-time listener for truck updates
+  DatabaseService.onTrucksUpdate((updatedTrucks) => {
+    const updatedTruck = updatedTrucks.find(t => t.id === truckId)
+    if (updatedTruck) {
+      truck = updatedTruck
+      updateTruckDisplay()
+    }
+  })
+  
+  // Set up real-time listener for tire slots updates
+  DatabaseService.onTireSlotsUpdate('truck', truckId, (updatedSlots) => {
+    if (updatedSlots.length > 0) {
+      truckSlots = updatedSlots
+      renderSlots()
+      updateStatus()
+    }
+  })
 })
 
 // Event listeners
@@ -77,9 +121,9 @@ function createSlotCard(slot) {
                     <div class="assigned-tire">
                         <p class="tire-brand">${slot.tire.brand} ${slot.tire.type}</p>
                         <p class="tire-size">${slot.tire.size}</p>
-                        <p class="tire-id">ID: ${slot.tire.id}</p>
+                        <p class="tire-id">ID: ${slot.tire.customId || slot.tire.id}</p>
                         <p class="tire-id">DOT: ${slot.tire.dot || '-'}</p>
-                        <p class="tire-id">Najazdené km: ${slot.tire.km ?? 0}</p>
+                        <p class="tire-id">Najazdené km: ${formatKm(slot.tire.km ?? 0)}</p>
                     </div>
                 `
                     : `
@@ -114,10 +158,14 @@ function createSlotCard(slot) {
     `
 }
 
+function formatKm(km) {
+  return km.toLocaleString('sk-SK')
+}
+
 function openAssignModal(slotId) {
   currentSlot = slotId
   const slot = truckSlots.find((s) => s.id === slotId)
-  assignModalTitle.textContent = `Assign Tire to ${slot.position}`
+  assignModalTitle.textContent = `Priradiť pneumatiku k ${slot.position}`
 
   const availableTires = tires.filter((t) => t.status === "available")
   tireSelection.innerHTML = availableTires
@@ -125,8 +173,8 @@ function openAssignModal(slotId) {
       (tire) => `
         <div class="tire-option" onclick="assignTire('${slotId}', '${tire.id}')">
             <div class="tire-option-header">${tire.brand} ${tire.type}</div>
-            <div class="tire-option-details">${tire.size} - ID: ${tire.id}</div>
-            <div class="tire-option-details">DOT: ${tire.dot || '-'}, Najazdené km: ${tire.km ?? 0}</div>
+            <div class="tire-option-details">${tire.size} - ID: ${tire.customId || tire.id}</div>
+            <div class="tire-option-details">DOT: ${tire.dot || '-'}, Najazdené km: ${formatKm(tire.km ?? 0)}</div>
         </div>
     `,
     )
@@ -134,7 +182,7 @@ function openAssignModal(slotId) {
 
   if (availableTires.length === 0) {
     tireSelection.innerHTML =
-      '<p style="text-align: center; color: #6b7280; padding: 2rem;">No available tires in storage</p>'
+      '<p style="text-align: center; color: #6b7280; padding: 2rem;">Žiadne dostupné pneumatiky v sklade</p>'
   }
 
   assignModal.classList.add("active")
@@ -145,47 +193,68 @@ function closeAssignModalHandler() {
   currentSlot = null
 }
 
-function assignTire(slotId, tireId) {
+async function assignTire(slotId, tireId) {
   const tire = tires.find((t) => t.id === tireId)
   const slotIndex = truckSlots.findIndex((s) => s.id === slotId)
 
   if (tire && slotIndex !== -1) {
-    // Update tire status
-    tire.status = "assigned"
+    try {
+      // Update tire status
+      await DatabaseService.updateTire(tire.id, { status: "assigned" })
 
-    // Assign tire to slot
-    truckSlots[slotIndex].tire = tire
+      // Assign tire to slot
+      truckSlots[slotIndex].tire = tire
 
-    // Save data
-    localStorage.setItem("tires", JSON.stringify(tires))
-    localStorage.setItem(`truck_${truckId}_slots`, JSON.stringify(truckSlots))
+      // Save slots to database
+      await DatabaseService.updateTireSlots('truck', truckId, truckSlots)
 
-    // Re-render
-    renderSlots()
-    updateStatus()
-    closeAssignModalHandler()
+      // Reload tire slots to get updated data
+      await loadTireSlots()
+
+      // Re-render
+      renderSlots()
+      updateStatus()
+      closeAssignModalHandler()
+    } catch (error) {
+      console.error('Error assigning tire:', error)
+      alert('Chyba pri priraďovaní pneumatiky. Skúste to znova.')
+    }
   }
 }
 
-function removeTire(slotId) {
+async function removeTire(slotId) {
   const slotIndex = truckSlots.findIndex((s) => s.id === slotId)
 
   if (slotIndex !== -1 && truckSlots[slotIndex].tire) {
-    // Update tire status back to available
-    const tire = tires.find((t) => t.id === truckSlots[slotIndex].tire.id)
-    if (tire) {
-      tire.status = "available"
+    try {
+      // Update tire status back to available
+      const tire = tires.find((t) => t.id === truckSlots[slotIndex].tire.id)
+      if (tire) {
+        await DatabaseService.updateTire(tire.id, { status: "available" })
+      }
+
+      // Remove tire from slot
+      truckSlots[slotIndex].tire = null
+
+      // Save slots to database
+      await DatabaseService.updateTireSlots('truck', truckId, truckSlots)
+
+      // Reload tire slots to get updated data
+      await loadTireSlots()
+
+      // Re-render
+      renderSlots()
+      updateStatus()
+    } catch (error) {
+      console.error('Error removing tire:', error)
+      alert('Chyba pri odoberaní pneumatiky. Skúste to znova.')
     }
+  }
+}
 
-    // Remove tire from slot
-    truckSlots[slotIndex].tire = null
-
-    // Save data
-    localStorage.setItem("tires", JSON.stringify(tires))
-    localStorage.setItem(`truck_${truckId}_slots`, JSON.stringify(truckSlots))
-
-    // Re-render
-    renderSlots()
+function updateTruckDisplay() {
+  if (truck) {
+    truckPlate.textContent = truck.licensePlate
     updateStatus()
   }
 }
@@ -195,8 +264,8 @@ function updateStatus() {
   const totalSlots = truckSlots.length
   const isComplete = assignedCount === totalSlots
 
-  assignedStatus.textContent = `${assignedCount}/${totalSlots} Assigned`
-  completionBadge.textContent = isComplete ? "Complete" : "Incomplete"
+  assignedStatus.textContent = `${assignedCount}/${totalSlots} Priradené`
+  completionBadge.textContent = isComplete ? "Úplné" : "Neúplné"
   completionBadge.className = `status-badge ${isComplete ? "complete" : "incomplete"}`
 }
 

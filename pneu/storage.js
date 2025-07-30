@@ -54,6 +54,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     renderTires()
     updateStats()
   })
+  
+  // Set up automatic formatting for tire size
+  const tireSizeInput = document.getElementById("tireSize")
+  if (tireSizeInput) {
+    tireSizeInput.addEventListener("input", formatTireSize)
+    tireSizeInput.dataset.lastLength = "0"
+  }
 })
 
 // Event listeners
@@ -83,12 +90,29 @@ function openModal(tire = null) {
     document.getElementById("tireKm").value = "0"
   }
   tireModal.classList.add("active")
+  
+  // Znovu nastaví event listener pre formátovanie rozmeru
+  const tireSizeInput = document.getElementById("tireSize")
+  if (tireSizeInput) {
+    // Odstráni existujúci listener ak existuje
+    tireSizeInput.removeEventListener("input", formatTireSize)
+    // Pridá nový listener
+    tireSizeInput.addEventListener("input", formatTireSize)
+    // Inicializuje lastLength
+    tireSizeInput.dataset.lastLength = "0"
+  }
 }
 
 function closeModalHandler() {
   tireModal.classList.remove("active")
   editingTire = null
   tireForm.reset()
+  
+  // Odstráni event listener pre formátovanie rozmeru
+  const tireSizeInput = document.getElementById("tireSize")
+  if (tireSizeInput) {
+    tireSizeInput.removeEventListener("input", formatTireSize)
+  }
 }
 
 async function handleSubmit(e) {
@@ -100,9 +124,8 @@ async function handleSubmit(e) {
   const dot = document.getElementById("tireDot").value
   const km = parseInt(document.getElementById("tireKm").value) || 0
 
-  // Automatické formátovanie rozmeru
-  size = formatTireSize(size)
-  document.getElementById("tireSize").value = size
+  // Automatické formátovanie rozmeru už je spracované v event listeneri
+  // size je už formátovaný z input eventu
 
   try {
     if (editingTire) {
@@ -235,7 +258,7 @@ function createTireCard(tire) {
                     <p>${tire.size}</p>
                     <span class="tire-id">ID: ${tire.customId || tire.id}</span><br>
                     <span class="tire-id">DOT: ${tire.dot || "-"}</span><br>
-                    <span class="tire-id">Najazdené km: ${tire.km ?? 0}</span>
+                    <span class="tire-id">Najazdené km: ${formatKm(tire.km ?? 0)}</span>
                 </div>
                 <div class="tire-actions" onclick="event.stopPropagation()">
                     <button class="action-btn edit-btn" onclick="openModal(${JSON.stringify(tire).replace(/"/g, '&quot;')});event.stopPropagation()">
@@ -328,7 +351,7 @@ function renderGroupTable(group) {
               <tr>
                 <td>${t.customId || t.id}</td>
                 <td><span class="badge badge-dot">${t.dot || "-"}</span></td>
-                <td>${t.km ?? 0} km</td>
+                <td>${formatKm(t.km ?? 0)} km</td>
               </tr>
             `
           )
@@ -368,7 +391,7 @@ function renderTireStatusBadge(t) {
   if (t.status === 'available') return '<span class="badge badge-status badge-status-available">Aktívna</span>'
   if (t.status === 'assigned') return '<span class="badge badge-status badge-status-assigned">Priradená</span>'
   if (t.status === 'maintenance') return '<span class="badge badge-status badge-status-maintenance">Údržba</span>'
-  return '<span class="badge badge-status">Neznámy</span>'
+  return '<span class="badge badge-status badge-status-available">Aktívna</span>'
 }
 
 window.editTireFromGroup = function(tireId) {
@@ -424,8 +447,19 @@ globalThis.prefillFromGroup = function(brand, type, size) {
   document.getElementById("tireDot").value = ""
   document.getElementById("tireKm").value = "0"
   editingTire = null
-  modalTitle.textContent = "Add New Tire"
-  submitText.textContent = "Add Tire"
+  modalTitle.textContent = "Pridať novú pneumatiku"
+  submitText.textContent = "Pridať pneumatiku"
+  
+  // Znovu nastaví event listener pre formátovanie rozmeru
+  const tireSizeInput = document.getElementById("tireSize")
+  if (tireSizeInput) {
+    // Odstráni existujúci listener ak existuje
+    tireSizeInput.removeEventListener("input", formatTireSize)
+    // Pridá nový listener
+    tireSizeInput.addEventListener("input", formatTireSize)
+    // Inicializuje lastLength
+    tireSizeInput.dataset.lastLength = "0"
+  }
 }
 
 // Close modal when clicking outside
@@ -436,14 +470,61 @@ tireModal.addEventListener("click", (e) => {
 })
 
 // Automatické formátovanie rozmeru
-function formatTireSize(input) {
-  // Odstráni všetko okrem číslic, /, R, . , ,
-  let val = input.replace(/[^0-9Rr/., ]/g, "").toUpperCase()
-  // Nahrad bodku za ciarku pre posledné číslo
-  val = val.replace(/(R\d{2})[.,]?(\d)?/, (m, p1, p2) => p2 ? `${p1},${p2}` : p1)
-  // Pridá medzeru za R ak chýba
-  val = val.replace(/R(\d)/, "R $1")
-  // Pridá medzeru za /
-  val = val.replace(/(\d{3})\/(\d{2})/, "$1/$2 ")
-  return val.trim()
+function formatTireSize(e) {
+  const input = e.target
+  const cursorPosition = input.selectionStart
+  const oldValue = input.value
+  
+  // Ak užívateľ mazal (backspace), nechaj ho mazať
+  if (oldValue.length < input.dataset.lastLength) {
+    input.dataset.lastLength = oldValue.length
+    return
+  }
+  
+  let value = input.value.replace(/[^0-9]/g, '') // Odstráni všetko okrem číslic
+  
+  // Aplikuje formátovanie podľa vzoru: 111/11 R11.1
+  let formattedValue = value
+  
+  // Po 3 číslach pridaj /
+  if (value.length >= 3) {
+    formattedValue = value.slice(0, 3) + '/' + value.slice(3)
+  }
+  
+  // Po 5 číslach pridaj R (po /)
+  if (value.length >= 5) {
+    formattedValue = value.slice(0, 3) + '/' + value.slice(3, 5) + ' R' + value.slice(5)
+  }
+  
+  // Po 7 číslach pridaj . (po R)
+  if (value.length >= 7) {
+    formattedValue = value.slice(0, 3) + '/' + value.slice(3, 5) + ' R' + value.slice(5, 7) + '.' + value.slice(7)
+  }
+  
+  // Aktualizuje hodnotu v poli
+  input.value = formattedValue
+  input.dataset.lastLength = formattedValue.length
+  
+  // Nastaví kurzor na správnu pozíciu
+  let newCursorPosition = cursorPosition
+  
+  // Po 3 číslach pridaj 1 pozíciu pre /
+  if (value.length >= 3 && cursorPosition > 3) {
+    newCursorPosition++
+  }
+  
+  // Po 5 číslach pridaj 2 pozície pre " R"
+  if (value.length >= 5 && cursorPosition > 5) {
+    newCursorPosition += 2
+  }
+  
+  // Po 7 číslach pridaj 1 pozíciu pre .
+  if (value.length >= 7 && cursorPosition > 7) {
+    newCursorPosition++
+  }
+  
+  // Nastaví kurzor
+  input.setSelectionRange(newCursorPosition, newCursorPosition)
 }
+
+

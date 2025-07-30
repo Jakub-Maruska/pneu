@@ -7,13 +7,36 @@ if (localStorage.getItem("isLoggedIn") !== "true") {
 let trucks = []
 
 // DOM elements
-const truckGrid = document.getElementById("truckGrid")
+let truckGrid, goodCount, warningCount, dangerCount
 
 // Load trucks from database
 async function loadTrucks() {
   try {
     trucks = await DatabaseService.getTrucks()
+    
+    // Pre každé auto načítam sloty a vypočítam aktuálny počet pneumatík a status
+    for (let truck of trucks) {
+      try {
+        const slots = await DatabaseService.getTireSlots('truck', truck.id)
+        const assignedCount = slots.filter(slot => slot.tire).length
+        const totalSlots = slots.length
+        
+        // Aktualizujem truck objekt s aktuálnymi hodnotami
+        truck.tiresAssigned = assignedCount
+        truck.totalTires = totalSlots
+        
+        // Vypočítam status podľa kilometrov pneumatík
+        truck.status = calculateVehicleStatus(slots)
+      } catch (error) {
+        console.error(`Error loading slots for truck ${truck.id}:`, error)
+        truck.tiresAssigned = 0
+        truck.totalTires = 6 // Predvolený počet slotov
+        truck.status = 'good' // Predvolený status
+      }
+    }
+    
     renderTrucks()
+    updateStats()
   } catch (error) {
     console.error('Error loading trucks:', error)
     // Fallback to empty array
@@ -21,19 +44,89 @@ async function loadTrucks() {
   }
 }
 
+// Calculate vehicle status based on tire kilometers
+function calculateVehicleStatus(vehicleSlots) {
+  const assignedTires = vehicleSlots.filter(slot => slot.tire && slot.tire.km !== undefined);
+  
+  if (assignedTires.length === 0) {
+    return 'good'; // No tires assigned, consider as good
+  }
+  
+  const maxKm = Math.max(...assignedTires.map(tire => tire.tire.km || 0));
+  
+  if (maxKm < 150000) {
+    return 'good';
+  } else if (maxKm < 200000) {
+    return 'warning';
+  } else {
+    return 'danger';
+  }
+}
+
 // Initialize
 document.addEventListener("DOMContentLoaded", async () => {
+  // Initialize DOM elements
+  truckGrid = document.getElementById("truckGrid")
+  goodCount = document.getElementById("goodCount")
+  warningCount = document.getElementById("warningCount")
+  dangerCount = document.getElementById("dangerCount")
+  
   await loadTrucks()
   
   // Set up real-time listener for truck updates
-  DatabaseService.onTrucksUpdate((updatedTrucks) => {
+  DatabaseService.onTrucksUpdate(async (updatedTrucks) => {
     trucks = updatedTrucks
+    
+    // Pre každé auto načítam sloty a vypočítam aktuálny počet pneumatík a status
+    for (let truck of trucks) {
+      try {
+        const slots = await DatabaseService.getTireSlots('truck', truck.id)
+        const assignedCount = slots.filter(slot => slot.tire).length
+        const totalSlots = slots.length
+        
+        // Aktualizujem truck objekt s aktuálnymi hodnotami
+        truck.tiresAssigned = assignedCount
+        truck.totalTires = totalSlots
+        
+        // Vypočítam status podľa kilometrov pneumatík
+        truck.status = calculateVehicleStatus(slots)
+      } catch (error) {
+        console.error(`Error loading slots for truck ${truck.id}:`, error)
+        truck.tiresAssigned = 0
+        truck.totalTires = 6 // Predvolený počet slotov
+        truck.status = 'good' // Predvolený status
+      }
+    }
+    
     renderTrucks()
+    updateStats()
   })
 })
 
 function renderTrucks() {
   truckGrid.innerHTML = trucks.map((truck) => createTruckCard(truck)).join("")
+}
+
+function updateStats() {
+  const good = trucks.filter(t => t.status === 'good').length
+  const warning = trucks.filter(t => t.status === 'warning').length
+  const danger = trucks.filter(t => t.status === 'danger').length
+
+  console.log('Updating truck stats:', { good, warning, danger, total: trucks.length })
+  console.log('Truck statuses:', trucks.map(t => ({ id: t.id, status: t.status })))
+
+  goodCount.textContent = `${good} Dobrý`
+  warningCount.textContent = `${warning} Pozor`
+  dangerCount.textContent = `${danger} Kritické`
+}
+
+function getStatusText(status) {
+  switch(status) {
+    case 'good': return 'Dobrý';
+    case 'warning': return 'Pozor';
+    case 'danger': return 'Kritické';
+    default: return 'Dobrý';
+  }
 }
 
 function createTruckCard(truck) {
@@ -44,7 +137,7 @@ function createTruckCard(truck) {
         <div class="vehicle-card" onclick="window.location.href='truck-detail.html?id=${truck.id}'">
             <div class="vehicle-card-content">
                 <div class="vehicle-info">
-                    <div class="vehicle-icon ${truck.status}">
+                    <div class="vehicle-icon ${truck.status || 'good'}">
                         <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/>
                             <path d="M15 18H9"/>
@@ -56,7 +149,6 @@ function createTruckCard(truck) {
                     <div class="vehicle-details">
                         <h3>${truck.licensePlate}</h3>
                         <div class="vehicle-meta">
-                            <span class="status-badge-small status-${truck.status}">${truck.status}</span>
                             <span>${truck.tiresAssigned}/${truck.totalTires} pneumatík</span>
                         </div>
                     </div>

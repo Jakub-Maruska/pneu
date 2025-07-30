@@ -263,16 +263,16 @@ body {
   border-radius: 50%;
 }
 
-.stat-dot.available {
-  background-color: #10b981;
+.stat-dot.good {
+  background-color: #22c55e;
 }
 
-.stat-dot.assigned {
+.stat-dot.warning {
   background-color: #f59e0b;
 }
 
-.stat-dot.inactive {
-  background-color: #6b7280;
+.stat-dot.danger {
+  background-color: #ef4444;
 }
 
 .add-btn {
@@ -477,16 +477,22 @@ body {
   font-weight: 600;
 }
 
-.status-available {
+.status-good {
   background: #dcfce7;
   color: #166534;
   border: 1px solid #bbf7d0;
 }
 
-.status-assigned {
+.status-warning {
   background: #fed7aa;
   color: #9a3412;
   border: 1px solid #fdba74;
+}
+
+.status-danger {
+  background: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #fecaca;
 }
 
 /* Tire count with status colors */
@@ -531,16 +537,16 @@ body {
   box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
 }
 
-.vehicle-icon.active {
+.vehicle-icon.good {
   background: linear-gradient(135deg, #22c55e, #16a34a);
 }
 
-.vehicle-icon.maintenance {
-  background: linear-gradient(135deg, #f59e0b, #ef4444);
+.vehicle-icon.warning {
+  background: linear-gradient(135deg, #f59e0b, #d97706);
 }
 
-.vehicle-icon.inactive {
-  background: linear-gradient(135deg, #6b7280, #4b5563);
+.vehicle-icon.danger {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
 }
 
 .vehicle-details h3 {

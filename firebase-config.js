@@ -157,9 +157,65 @@ const DatabaseService = {
   async updateTireSlots(vehicleType, vehicleId, slots) {
     try {
       await db.collection(`${vehicleType}_slots`).doc(vehicleId).set({ slots });
+      
+      // Update tire count for the vehicle
+      const assignedCount = slots.filter(slot => slot.tire).length;
+      const totalSlots = slots.length;
+      
+      // Calculate new status based on tire kilometers
+      const newStatus = this.calculateVehicleStatus(slots);
+      
+      console.log(`Updating ${vehicleType} ${vehicleId}:`, {
+        assignedCount,
+        totalSlots,
+        newStatus,
+        slots: slots.map(slot => slot.tire ? { id: slot.tire.id, km: slot.tire.km } : null)
+      });
+      
+      if (vehicleType === 'truck') {
+        await this.updateTruck(vehicleId, { 
+          tiresAssigned: assignedCount,
+          totalTires: totalSlots,
+          status: newStatus
+        });
+      } else if (vehicleType === 'trailer') {
+        await this.updateTrailer(vehicleId, { 
+          tiresAssigned: assignedCount,
+          totalTires: totalSlots,
+          status: newStatus
+        });
+      }
     } catch (error) {
       console.error('Error updating tire slots:', error);
       throw error;
+    }
+  },
+
+  // Calculate vehicle status based on tire kilometers
+  calculateVehicleStatus(vehicleSlots) {
+    const assignedTires = vehicleSlots.filter(slot => slot.tire && slot.tire.km !== undefined);
+    
+    if (assignedTires.length === 0) {
+      console.log('No tires assigned, status: good');
+      return 'good'; // No tires assigned, consider as good
+    }
+    
+    const maxKm = Math.max(...assignedTires.map(tire => tire.tire.km || 0));
+    console.log('Calculating vehicle status:', { 
+      assignedTires: assignedTires.length, 
+      maxKm, 
+      tireKms: assignedTires.map(tire => tire.tire.km || 0)
+    });
+    
+    if (maxKm < 150000) {
+      console.log('Status: good (max km < 150k)');
+      return 'good';
+    } else if (maxKm < 200000) {
+      console.log('Status: warning (150k <= max km < 200k)');
+      return 'warning';
+    } else {
+      console.log('Status: danger (max km >= 200k)');
+      return 'danger';
     }
   },
 
@@ -182,6 +238,17 @@ const DatabaseService = {
     return db.collection('trailers').onSnapshot(snapshot => {
       const trailers = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
       callback(trailers);
+    });
+  },
+
+  onTireSlotsUpdate(vehicleType, vehicleId, callback) {
+    return db.collection(`${vehicleType}_slots`).doc(vehicleId).onSnapshot(snapshot => {
+      if (snapshot.exists) {
+        const slots = snapshot.data().slots || [];
+        callback(slots);
+      } else {
+        callback([]);
+      }
     });
   }
 };

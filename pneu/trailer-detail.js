@@ -7,15 +7,9 @@ if (localStorage.getItem("isLoggedIn") !== "true") {
 const urlParams = new URLSearchParams(window.location.search)
 const trailerId = urlParams.get("id")
 
-// Mock data
-const trailers = {
-  1: { licensePlate: "ZC375YC" },
-  2: { licensePlate: "TR892KL" },
-  3: { licensePlate: "HJ456NM" },
-}
-
 // Global variables
 let tires = []
+let trailer = null
 let trailerSlots = [
   { id: "left-front", position: "Ľavé predné", tire: null },
   { id: "left-middle", position: "Ľavé stredné", tire: null },
@@ -28,19 +22,39 @@ let trailerSlots = [
 // Load data from database
 async function loadData() {
   try {
+    // Load trailer data
+    const trailers = await DatabaseService.getTrailers()
+    trailer = trailers.find(t => t.id === trailerId)
+    
+    if (!trailer) {
+      window.location.href = "trailer.html"
+      return
+    }
+    
+    // Update trailer plate display
+    trailerPlate.textContent = trailer.licensePlate
+    
     // Load tires
     tires = await DatabaseService.getTires()
     
     // Load trailer slots
-    const savedSlots = await DatabaseService.getTireSlots('trailer', trailerId)
-    if (savedSlots.length > 0) {
-      trailerSlots = savedSlots
-    }
+    await loadTireSlots()
     
     renderSlots()
     updateStatus()
   } catch (error) {
     console.error('Error loading data:', error)
+  }
+}
+
+async function loadTireSlots() {
+  try {
+    const savedSlots = await DatabaseService.getTireSlots('trailer', trailerId)
+    if (savedSlots.length > 0) {
+      trailerSlots = savedSlots
+    }
+  } catch (error) {
+    console.error('Error loading tire slots:', error)
   }
 }
 
@@ -58,17 +72,30 @@ const tireSelection = document.getElementById("tireSelection")
 
 // Initialize
 document.addEventListener("DOMContentLoaded", async () => {
-  if (trailers[trailerId]) {
-    trailerPlate.textContent = trailers[trailerId].licensePlate
-    await loadData()
-    
-    // Set up real-time listeners
-    DatabaseService.onTiresUpdate((updatedTires) => {
-      tires = updatedTires
-    })
-  } else {
-    window.location.href = "trailer.html"
-  }
+  await loadData()
+  
+  // Set up real-time listeners
+  DatabaseService.onTiresUpdate((updatedTires) => {
+    tires = updatedTires
+  })
+  
+  // Set up real-time listener for trailer updates
+  DatabaseService.onTrailersUpdate((updatedTrailers) => {
+    const updatedTrailer = updatedTrailers.find(t => t.id === trailerId)
+    if (updatedTrailer) {
+      trailer = updatedTrailer
+      updateTrailerDisplay()
+    }
+  })
+  
+  // Set up real-time listener for tire slots updates
+  DatabaseService.onTireSlotsUpdate('trailer', trailerId, (updatedSlots) => {
+    if (updatedSlots.length > 0) {
+      trailerSlots = updatedSlots
+      renderSlots()
+      updateStatus()
+    }
+  })
 })
 
 // Event listeners
@@ -89,9 +116,9 @@ function createSlotCard(slot) {
                     <div class="assigned-tire">
                         <p class="tire-brand">${slot.tire.brand} ${slot.tire.type}</p>
                         <p class="tire-size">${slot.tire.size}</p>
-                        <p class="tire-id">ID: ${slot.tire.id}</p>
+                        <p class="tire-id">ID: ${slot.tire.customId || slot.tire.id}</p>
                         <p class="tire-id">DOT: ${slot.tire.dot || '-'}</p>
-                        <p class="tire-id">Najazdené km: ${slot.tire.km ?? 0}</p>
+                        <p class="tire-id">Najazdené km: ${formatKm(slot.tire.km ?? 0)}</p>
                     </div>
                 `
                     : `
@@ -109,7 +136,7 @@ function createSlotCard(slot) {
                         <line x1="18" y1="6" x2="6" y2="18"/>
                         <line x1="6" y1="6" x2="18" y2="18"/>
                     </svg>
-                    Remove
+                    Odobrať
                 </button>
             `
                 : `
@@ -118,7 +145,7 @@ function createSlotCard(slot) {
                         <line x1="12" y1="5" x2="12" y2="19"/>
                         <line x1="5" y1="12" x2="19" y2="12"/>
                     </svg>
-                    Assign
+                    Priradiť
                 </button>
             `
             }
@@ -126,10 +153,14 @@ function createSlotCard(slot) {
     `
 }
 
+function formatKm(km) {
+  return km.toLocaleString('sk-SK')
+}
+
 function openAssignModal(slotId) {
   currentSlot = slotId
   const slot = trailerSlots.find((s) => s.id === slotId)
-  assignModalTitle.textContent = `Assign Tire to ${slot.position}`
+  assignModalTitle.textContent = `Priradiť pneumatiku k ${slot.position}`
 
   const availableTires = tires.filter((t) => t.status === "available")
   tireSelection.innerHTML = availableTires
@@ -137,8 +168,8 @@ function openAssignModal(slotId) {
       (tire) => `
         <div class="tire-option" onclick="assignTire('${slotId}', '${tire.id}')">
             <div class="tire-option-header">${tire.brand} ${tire.type}</div>
-            <div class="tire-option-details">${tire.size} - ID: ${tire.id}</div>
-            <div class="tire-option-details">DOT: ${tire.dot || '-'}, Najazdené km: ${tire.km ?? 0}</div>
+            <div class="tire-option-details">${tire.size} - ID: ${tire.customId || tire.id}</div>
+            <div class="tire-option-details">DOT: ${tire.dot || '-'}, Najazdené km: ${formatKm(tire.km ?? 0)}</div>
         </div>
     `,
     )
@@ -146,7 +177,7 @@ function openAssignModal(slotId) {
 
   if (availableTires.length === 0) {
     tireSelection.innerHTML =
-      '<p style="text-align: center; color: #6b7280; padding: 2rem;">No available tires in storage</p>'
+      '<p style="text-align: center; color: #6b7280; padding: 2rem;">Žiadne dostupné pneumatiky v sklade</p>'
   }
 
   assignModal.classList.add("active")
@@ -172,13 +203,16 @@ async function assignTire(slotId, tireId) {
       // Save slots to database
       await DatabaseService.updateTireSlots('trailer', trailerId, trailerSlots)
 
+      // Reload tire slots to get updated data
+      await loadTireSlots()
+
       // Re-render
       renderSlots()
       updateStatus()
       closeAssignModalHandler()
     } catch (error) {
       console.error('Error assigning tire:', error)
-      alert('Error assigning tire. Please try again.')
+      alert('Chyba pri priraďovaní pneumatiky. Skúste to znova.')
     }
   }
 }
@@ -200,13 +234,23 @@ async function removeTire(slotId) {
       // Save slots to database
       await DatabaseService.updateTireSlots('trailer', trailerId, trailerSlots)
 
+      // Reload tire slots to get updated data
+      await loadTireSlots()
+
       // Re-render
       renderSlots()
       updateStatus()
     } catch (error) {
       console.error('Error removing tire:', error)
-      alert('Error removing tire. Please try again.')
+      alert('Chyba pri odoberaní pneumatiky. Skúste to znova.')
     }
+  }
+}
+
+function updateTrailerDisplay() {
+  if (trailer) {
+    trailerPlate.textContent = trailer.licensePlate
+    updateStatus()
   }
 }
 
@@ -215,8 +259,8 @@ function updateStatus() {
   const totalSlots = trailerSlots.length
   const isComplete = assignedCount === totalSlots
 
-  assignedStatus.textContent = `${assignedCount}/${totalSlots} Assigned`
-  completionBadge.textContent = isComplete ? "Complete" : "Incomplete"
+  assignedStatus.textContent = `${assignedCount}/${totalSlots} Priradené`
+  completionBadge.textContent = isComplete ? "Úplné" : "Neúplné"
   completionBadge.className = `status-badge ${isComplete ? "complete" : "incomplete"}`
 }
 
