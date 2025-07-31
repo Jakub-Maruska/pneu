@@ -25,6 +25,20 @@ const sampleData = {
     { customId: "M3N84729", brand: "Pirelli", type: "TH01", size: "385/55 R22.5", status: "available", dot: "2022", km: 220000 },
     { customId: "P7Q92847", brand: "Yokohama", type: "104ZR", size: "295/80 R22.5", status: "assigned", dot: "2020", km: 95000 },
     { customId: "G7H38291", brand: "Goodyear", type: "G159", size: "385/65 R22.5", status: "available", dot: "2023", km: 25000 },
+    
+    // Pneumatiky na predaj (oranzova farba)
+    { customId: "S4L12345", brand: "Michelin", type: "XDA2", size: "355/50 R22.5", status: "forSale", dot: "2021", km: 140000 },
+    { customId: "T5M67890", brand: "Bridgestone", type: "M729", size: "295/75 R22.5", status: "forSale", dot: "2020", km: 170000 },
+    { customId: "U6N11111", brand: "Continental", type: "HSC1", size: "315/70 R22.5", status: "forSale", dot: "2021", km: 155000 },
+    { customId: "V7O22222", brand: "Goodyear", type: "G159", size: "385/65 R22.5", status: "forSale", dot: "2020", km: 185000 },
+    { customId: "W8P33333", brand: "Pirelli", type: "TH01", size: "385/55 R22.5", status: "forSale", dot: "2021", km: 165000 },
+    
+    // Vyhodene pneumatiky (cervena farba)
+    { customId: "X9Q44444", brand: "Michelin", type: "XDA2", size: "355/50 R22.5", status: "disposed", dot: "2019", km: 280000 },
+    { customId: "Y0R55555", brand: "Bridgestone", type: "M729", size: "295/75 R22.5", status: "disposed", dot: "2018", km: 320000 },
+    { customId: "Z1S66666", brand: "Continental", type: "HSC1", size: "315/70 R22.5", status: "disposed", dot: "2019", km: 290000 },
+    { customId: "A2T77777", brand: "Goodyear", type: "G159", size: "385/65 R22.5", status: "disposed", dot: "2018", km: 310000 },
+    { customId: "B3U88888", brand: "Pirelli", type: "TH01", size: "385/55 R22.5", status: "disposed", dot: "2019", km: 275000 },
   ],
   
   trucks: [

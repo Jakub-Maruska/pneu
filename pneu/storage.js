@@ -29,10 +29,13 @@ let editingTire = null
 
 // DOM elements
 const availableTiresContainer = document.getElementById("availableTires")
-const assignedTiresContainer = document.getElementById("assignedTires")
-const assignedSection = document.getElementById("assignedSection")
+const forSaleTiresContainer = document.getElementById("forSaleTires")
+const forSaleSection = document.getElementById("forSaleSection")
+const disposedTiresContainer = document.getElementById("disposedTires")
+const disposedSection = document.getElementById("disposedSection")
 const availableCount = document.getElementById("availableCount")
-const assignedCount = document.getElementById("assignedCount")
+const forSaleCount = document.getElementById("forSaleCount")
+const disposedCount = document.getElementById("disposedCount")
 const addTireBtn = document.getElementById("addTireBtn")
 const tireModal = document.getElementById("tireModal")
 const closeModal = document.getElementById("closeModal")
@@ -187,7 +190,8 @@ async function deleteTire(tireId) {
 function renderTires() {
   // Filtering
   let availableTires = tires.filter((t) => t.status === "available")
-  let assignedTires = tires.filter((t) => t.status === "assigned")
+  let forSaleTires = tires.filter((t) => t.status === "forSale")
+  let disposedTires = tires.filter((t) => t.status === "disposed")
 
   const searchVal = filterSearch.value.trim().toLowerCase()
 
@@ -200,7 +204,15 @@ function renderTires() {
       (t.id && t.id.toLowerCase().includes(searchVal)) ||
       (t.dot && t.dot.toLowerCase().includes(searchVal))
     )
-    assignedTires = assignedTires.filter((t) => 
+    forSaleTires = forSaleTires.filter((t) => 
+      t.brand.toLowerCase().includes(searchVal) || 
+      t.type.toLowerCase().includes(searchVal) ||
+      t.size.toLowerCase().includes(searchVal) ||
+      (t.customId && t.customId.toLowerCase().includes(searchVal)) ||
+      (t.id && t.id.toLowerCase().includes(searchVal)) ||
+      (t.dot && t.dot.toLowerCase().includes(searchVal))
+    )
+    disposedTires = disposedTires.filter((t) => 
       t.brand.toLowerCase().includes(searchVal) || 
       t.type.toLowerCase().includes(searchVal) ||
       t.size.toLowerCase().includes(searchVal) ||
@@ -223,7 +235,7 @@ function renderTires() {
       const group = groups[key]
       const tire = group[0]
       return `
-        <div class="tire-card group-card" onclick="showGroupDetail('${encodeURIComponent(key)}')">
+        <div class="tire-card group-card" onclick="showGroupDetail('${encodeURIComponent(key)}', 'available')">
           <div class="tire-card-header" style="display: flex; justify-content: space-between; align-items: flex-start;">
             <div class="tire-info">
               <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
@@ -238,12 +250,82 @@ function renderTires() {
     })
     .join("")
 
-  // Render assigned tires (bez zoskupovania)
-  if (assignedTires.length > 0) {
-    assignedTiresContainer.innerHTML = assignedTires.map((tire) => createTireCard(tire)).join("")
-    assignedSection.style.display = "block"
+  // Render forSale tires (grouped like available tires)
+  if (forSaleTires.length > 0) {
+    // Grouping forSale tires
+    const forSaleGroups = {}
+    forSaleTires.forEach((tire) => {
+      const key = `${tire.brand}|${tire.type}|${tire.size}`
+      if (!forSaleGroups[key]) forSaleGroups[key] = []
+      forSaleGroups[key].push(tire)
+    })
+
+    forSaleTiresContainer.innerHTML = Object.keys(forSaleGroups)
+      .map((key) => {
+        const group = forSaleGroups[key]
+        const tire = group[0]
+        return `
+          <div class="tire-card group-card" onclick="showGroupDetail('${encodeURIComponent(key)}', 'forSale')">
+            <div class="tire-card-header" style="display: flex; justify-content: space-between; align-items: flex-start;">
+              <div class="tire-info">
+                <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                  <h3>${tire.brand} ${tire.type}</h3>
+                </div>
+                <p>${tire.size}</p>
+              </div>
+              <span class="tire-count status-forsale" style="align-self: flex-start; margin-left: 1rem;">${group.length} ks</span>
+            </div>
+          </div>
+        `
+      })
+      .join("")
+    forSaleSection.style.display = "block"
+    // Initially hide the content
+    const forSaleContent = forSaleSection.querySelector('.collapsible-content')
+    if (forSaleContent) {
+      forSaleContent.style.display = 'none'
+    }
   } else {
-    assignedSection.style.display = "none"
+    forSaleSection.style.display = "none"
+  }
+
+  // Render disposed tires (grouped like available tires)
+  if (disposedTires.length > 0) {
+    // Grouping disposed tires
+    const disposedGroups = {}
+    disposedTires.forEach((tire) => {
+      const key = `${tire.brand}|${tire.type}|${tire.size}`
+      if (!disposedGroups[key]) disposedGroups[key] = []
+      disposedGroups[key].push(tire)
+    })
+
+    disposedTiresContainer.innerHTML = Object.keys(disposedGroups)
+      .map((key) => {
+        const group = disposedGroups[key]
+        const tire = group[0]
+        return `
+          <div class="tire-card group-card" onclick="showGroupDetail('${encodeURIComponent(key)}', 'disposed')">
+            <div class="tire-card-header" style="display: flex; justify-content: space-between; align-items: flex-start;">
+              <div class="tire-info">
+                <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                  <h3>${tire.brand} ${tire.type}</h3>
+                </div>
+                <p>${tire.size}</p>
+              </div>
+              <span class="tire-count status-disposed" style="align-self: flex-start; margin-left: 1rem;">${group.length} ks</span>
+            </div>
+          </div>
+        `
+      })
+      .join("")
+    disposedSection.style.display = "block"
+    // Initially hide the content
+    const disposedContent = disposedSection.querySelector('.collapsible-content')
+    if (disposedContent) {
+      disposedContent.style.display = 'none'
+    }
+  } else {
+    disposedSection.style.display = "none"
   }
 }
 
@@ -283,20 +365,22 @@ function createTireCard(tire) {
 
 function updateStats() {
   const available = tires.filter((t) => t.status === "available").length
-  const assigned = tires.filter((t) => t.status === "assigned").length
+  const forSale = tires.filter((t) => t.status === "forSale").length
+  const disposed = tires.filter((t) => t.status === "disposed").length
 
   availableCount.textContent = `${available} Dostupné`
-  assignedCount.textContent = `${assigned} Priradené`
+  forSaleCount.textContent = `${forSale} Predávané`
+  disposedCount.textContent = `${disposed} Vyradené`
 }
 
 // Remove saveTires function as it's no longer needed with Firebase
 
 // Group detail logic
-window.showGroupDetail = function (key) {
+window.showGroupDetail = function (key, status = "available") {
   const decodedKey = decodeURIComponent(key)
   const [brand, type, size] = decodedKey.split("|")
   const group = tires.filter(
-    (t) => t.status === "available" && t.brand === brand && t.type === type && t.size === size
+    (t) => t.status === status && t.brand === brand && t.type === type && t.size === size
   )
   const isMobile = window.innerWidth <= 500
   // Rozdelenie rozmeru na časti (napr. 355/50 R 22,5)
@@ -307,6 +391,12 @@ window.showGroupDetail = function (key) {
     sizeR = 'R'
     sizeNum = sizeMatch[2]
   }
+  
+  // Určenie farby badge podľa statusu
+  let badgeClass = "badge-count"
+  if (status === "forSale") badgeClass = "badge badge-status badge-status-forsale"
+  else if (status === "disposed") badgeClass = "badge badge-status badge-status-disposed"
+  
   groupDetailList.innerHTML = `
     <div class="group-header-box">
       <div style="display:flex; justify-content:space-between; align-items:flex-start;">
@@ -316,7 +406,7 @@ window.showGroupDetail = function (key) {
           </div>
           <div style="color:#6b7280; font-size:0.875rem;">${sizeMain} ${sizeR} ${sizeNum}</div>
         </div>
-        <span class="badge badge-count">${group.length} ks</span>
+        <span class="${badgeClass}">${group.length} ks</span>
       </div>
     </div>
     <div class="group-table-box">
@@ -350,7 +440,7 @@ function renderGroupTable(group) {
             (t) => `
               <tr>
                 <td>${t.customId || t.id}</td>
-                <td><span class="badge badge-dot">${t.dot || "-"}</span></td>
+                <td>${t.dot || "-"}</td>
                 <td>${formatKm(t.km ?? 0)} km</td>
               </tr>
             `
@@ -369,7 +459,7 @@ function renderGroupMobileList(group) {
           (t) => `
             <div class="group-mobile-card">
               <div class="group-mobile-row"><span class="group-mobile-label">ID:</span> <span class="group-mobile-id">${t.customId || t.id}</span></div>
-              <div class="group-mobile-row"><span class="group-mobile-label">DOT:</span> <span class="group-mobile-dot">${t.dot || "-"}</span></div>
+              <div class="group-mobile-row"><span class="group-mobile-label">DOT:</span> <span class="group-mobile-km">${t.dot || "-"}</span></div>
               <div class="group-mobile-row"><span class="group-mobile-label">Najazdené km:</span> <span class="group-mobile-km">${formatKm(t.km ?? 0)} km</span></div>
               <div class="group-mobile-actions">
                 <button class="group-mobile-btn edit" onclick="editTireFromGroup('${t.customId || t.id}')">Upraviť</button>
@@ -389,7 +479,8 @@ function formatKm(km) {
 function renderTireStatusBadge(t) {
   // Príklad: podľa potreby rozšír o ďalšie stavy
   if (t.status === 'available') return '<span class="badge badge-status badge-status-available">Aktívna</span>'
-  if (t.status === 'assigned') return '<span class="badge badge-status badge-status-assigned">Priradená</span>'
+  if (t.status === 'forSale') return '<span class="badge badge-status badge-status-forsale">Na predaj</span>'
+  if (t.status === 'disposed') return '<span class="badge badge-status badge-status-disposed">Vyhodene</span>'
   if (t.status === 'maintenance') return '<span class="badge badge-status badge-status-maintenance">Údržba</span>'
   return '<span class="badge badge-status badge-status-available">Aktívna</span>'
 }
@@ -527,4 +618,17 @@ function formatTireSize(e) {
   input.setSelectionRange(newCursorPosition, newCursorPosition)
 }
 
-
+// Dropdown functionality
+window.toggleSection = function(sectionId) {
+  const section = document.getElementById(sectionId)
+  const content = section.querySelector('.collapsible-content')
+  const arrow = section.querySelector('.dropdown-arrow')
+  
+  if (content.style.display === 'none' || content.style.display === '') {
+    content.style.display = 'block'
+    arrow.style.transform = 'rotate(180deg)'
+  } else {
+    content.style.display = 'none'
+    arrow.style.transform = 'rotate(0deg)'
+  }
+}

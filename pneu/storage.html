@@ -36,8 +36,12 @@
                                     <span id="availableCount">0 Dostupné</span>
                                 </div>
                                 <div class="stat-item">
-                                    <div class="stat-dot assigned"></div>
-                                    <span id="assignedCount">0 Priradené</span>
+                                    <div class="stat-dot warning"></div>
+                                    <span id="forSaleCount">0 Na predaj</span>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-dot danger"></div>
+                                    <span id="disposedCount">0 Vyhodene</span>
                                 </div>
                             </div>
                         </div>
@@ -70,13 +74,34 @@
                     <div id="availableTires" class="tire-grid"></div>
                 </div>
 
-                <!-- Assigned Tires Section -->
-                <div class="section" id="assignedSection" style="display: none;">
-                    <div class="section-header">
-                        <div class="stat-dot assigned"></div>
-                        <h2>Priradené Pneumatiky</h2>
+                <!-- For Sale Tires Section -->
+                <div class="section" id="forSaleSection" style="display: none;">
+                    <div class="section-header collapsible" onclick="toggleSection('forSaleSection')">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                        </svg>
+                        <h2>Na predaj</h2>
+                        <svg class="dropdown-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="m6 9 6 6 6-6"/>
+                        </svg>
                     </div>
-                    <div id="assignedTires" class="tire-grid"></div>
+                    <div id="forSaleTires" class="tire-grid collapsible-content"></div>
+                </div>
+
+                <!-- Disposed Tires Section -->
+                <div class="section" id="disposedSection" style="display: none;">
+                    <div class="section-header collapsible" onclick="toggleSection('disposedSection')">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M3 6h18"/>
+                            <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/>
+                            <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>
+                        </svg>
+                        <h2>Vyhodene</h2>
+                        <svg class="dropdown-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="m6 9 6 6 6-6"/>
+                        </svg>
+                    </div>
+                    <div id="disposedTires" class="tire-grid collapsible-content"></div>
                 </div>
             </div>
         </main>

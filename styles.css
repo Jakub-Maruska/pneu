@@ -159,11 +159,11 @@ body {
 }
 
 .truck-header .header-background {
-  background: linear-gradient(135deg, #3b82f6, #4f46e5, #7c3aed);
+  background: linear-gradient(135deg, #facc15, #eab308, #fde047);
 }
 
 .trailer-header .header-background {
-  background: linear-gradient(135deg, #8b5cf6, #ec4899, #ef4444);
+  background: linear-gradient(135deg, #3b82f6, #2563eb, #60a5fa);
 }
 
 .header-content {
@@ -205,11 +205,11 @@ body {
 }
 
 .truck-icon {
-  background: linear-gradient(135deg, #3b82f6, #4f46e5);
+  background: linear-gradient(135deg, #facc15, #eab308);
 }
 
 .trailer-icon {
-  background: linear-gradient(135deg, #8b5cf6, #ec4899);
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
 }
 
 .header-text h1 {
@@ -226,14 +226,14 @@ body {
 }
 
 .truck-header h1 {
-  background: linear-gradient(135deg, #3b82f6, #4f46e5);
+  background: linear-gradient(135deg, #facc15, #eab308);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
 .trailer-header h1 {
-  background: linear-gradient(135deg, #8b5cf6, #ec4899);
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -342,6 +342,33 @@ body {
   margin-bottom: 1rem;
 }
 
+.section-header.collapsible {
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.2s;
+}
+
+.section-header.collapsible:hover {
+  opacity: 0.8;
+}
+
+.dropdown-arrow {
+  margin-left: auto;
+  transition: transform 0.2s;
+  color: #6b7280;
+}
+
+.collapsible-content {
+  transition: all 0.3s ease;
+  padding-top: 1rem;
+}
+
+.collapsible-content .tire-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: 1fr;
+}
+
 .section-header h2 {
   font-size: 1.125rem;
   font-weight: 700;
@@ -355,11 +382,11 @@ body {
 }
 
 .truck-indicator {
-  background: linear-gradient(to bottom, #3b82f6, #4f46e5);
+  background: linear-gradient(to bottom, #facc15, #eab308);
 }
 
 .trailer-indicator {
-  background: linear-gradient(to bottom, #8b5cf6, #ec4899);
+  background: linear-gradient(to bottom, #3b82f6, #2563eb);
 }
 
 /* Grids */
@@ -512,6 +539,12 @@ body {
 .tire-count.status-assigned {
   background: linear-gradient(135deg, #f59e0b, #d97706);
 }
+.tire-count.status-forsale {
+  background: linear-gradient(135deg, #ea580c, #c2410c);
+}
+.tire-count.status-disposed {
+  background: linear-gradient(135deg, #dc2626, #b91c1c);
+}
 
 /* Vehicle Cards */
 .vehicle-card-content {
@@ -547,6 +580,10 @@ body {
 
 .vehicle-icon.danger {
   background: linear-gradient(135deg, #ef4444, #dc2626);
+}
+
+.vehicle-icon.unknown {
+  background: linear-gradient(135deg, #e5e7eb, #d1d5db);
 }
 
 .vehicle-details h3 {
@@ -594,6 +631,26 @@ body {
   color: #f59e0b;
 }
 
+.status-icon.good {
+  background: #dcfce7;
+  color: #16a34a;
+}
+
+.status-icon.warning {
+  background: #fed7aa;
+  color: #f59e0b;
+}
+
+.status-icon.danger {
+  background: #fee2e2;
+  color: #ef4444;
+}
+
+.status-icon.unknown {
+  background: #f3f4f6;
+  color: #6b7280;
+}
+
 .progress-bar {
   width: 100%;
   margin-top: 1rem;
@@ -627,6 +684,22 @@ body {
 
 .progress-fill.incomplete {
   background: linear-gradient(135deg, #f59e0b, #ef4444);
+}
+
+.progress-fill.good {
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+}
+
+.progress-fill.warning {
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+}
+
+.progress-fill.danger {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+}
+
+.progress-fill.unknown {
+  background: linear-gradient(135deg, #e5e7eb, #d1d5db);
 }
 
 /* Tire Slots */
@@ -770,8 +843,8 @@ body {
 }
 
 .nav-icon.truck-icon {
-  background: #dbeafe;
-  color: #3b82f6;
+  background: #fef9c3;
+  color: #eab308;
 }
 
 .nav-icon.storage-icon {
@@ -780,8 +853,8 @@ body {
 }
 
 .nav-icon.trailer-icon {
-  background: #f3e8ff;
-  color: #8b5cf6;
+  background: #dbeafe;
+  color: #3b82f6;
 }
 
 .nav-icon.active {
@@ -790,7 +863,7 @@ body {
 }
 
 .nav-icon.truck-icon.active {
-  background: linear-gradient(135deg, #3b82f6, #4f46e5);
+  background: linear-gradient(135deg, #facc15, #eab308);
   color: white;
 }
 
@@ -800,7 +873,7 @@ body {
 }
 
 .nav-icon.trailer-icon.active {
-  background: linear-gradient(135deg, #8b5cf6, #ec4899);
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
   color: white;
 }
 
@@ -815,7 +888,7 @@ body {
 }
 
 .nav-item.active .truck-icon span {
-  color: #3b82f6;
+  color: #eab308;
 }
 
 .nav-item.active .storage-icon span {
@@ -823,7 +896,7 @@ body {
 }
 
 .nav-item.active .trailer-icon span {
-  color: #8b5cf6;
+  color: #3b82f6;
 }
 
 /* Modal Styles */
@@ -1036,6 +1109,14 @@ body {
 .badge-status-maintenance {
   background: #fef3c7;
   color: #f59e0b;
+}
+.badge-status-forsale {
+  background: #fed7aa;
+  color: #ea580c;
+}
+.badge-status-disposed {
+  background: #fee2e2;
+  color: #dc2626;
 }
 .group-table-box {
   background: #fff;

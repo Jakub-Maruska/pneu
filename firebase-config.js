@@ -196,27 +196,26 @@ const DatabaseService = {
     const assignedTires = vehicleSlots.filter(slot => slot.tire && slot.tire.km !== undefined);
     
     if (assignedTires.length === 0) {
-      console.log('No tires assigned, status: good');
       return 'good'; // No tires assigned, consider as good
     }
     
-    const maxKm = Math.max(...assignedTires.map(tire => tire.tire.km || 0));
-    console.log('Calculating vehicle status:', { 
-      assignedTires: assignedTires.length, 
-      maxKm, 
-      tireKms: assignedTires.map(tire => tire.tire.km || 0)
-    });
-    
-    if (maxKm < 150000) {
-      console.log('Status: good (max km < 150k)');
-      return 'good';
-    } else if (maxKm < 200000) {
-      console.log('Status: warning (150k <= max km < 200k)');
-      return 'warning';
-    } else {
-      console.log('Status: danger (max km >= 200k)');
+    // Check if any tire has over 200,000 km (critical)
+    const hasCriticalTire = assignedTires.some(tire => (tire.tire.km || 0) >= 200000);
+    if (hasCriticalTire) {
       return 'danger';
     }
+    
+    // Check if any tire has between 150,000-200,000 km (warning)
+    const hasWarningTire = assignedTires.some(tire => {
+      const km = tire.tire.km || 0;
+      return km >= 150000 && km < 200000;
+    });
+    if (hasWarningTire) {
+      return 'warning';
+    }
+    
+    // All tires are under 150,000 km (good)
+    return 'good';
   },
 
   // Real-time listeners

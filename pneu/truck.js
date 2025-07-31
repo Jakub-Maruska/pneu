@@ -49,18 +49,26 @@ function calculateVehicleStatus(vehicleSlots) {
   const assignedTires = vehicleSlots.filter(slot => slot.tire && slot.tire.km !== undefined);
   
   if (assignedTires.length === 0) {
-    return 'good'; // No tires assigned, consider as good
+    return 'unknown'; // No tires assigned, status is unknown
   }
   
-  const maxKm = Math.max(...assignedTires.map(tire => tire.tire.km || 0));
-  
-  if (maxKm < 150000) {
-    return 'good';
-  } else if (maxKm < 200000) {
-    return 'warning';
-  } else {
+  // Check if any tire has over 200,000 km (critical)
+  const hasCriticalTire = assignedTires.some(tire => (tire.tire.km || 0) >= 200000);
+  if (hasCriticalTire) {
     return 'danger';
   }
+  
+  // Check if any tire has between 150,000-200,000 km (warning)
+  const hasWarningTire = assignedTires.some(tire => {
+    const km = tire.tire.km || 0;
+    return km >= 150000 && km < 200000;
+  });
+  if (hasWarningTire) {
+    return 'warning';
+  }
+  
+  // All tires are under 150,000 km (good)
+  return 'good';
 }
 
 // Initialize
@@ -125,13 +133,13 @@ function getStatusText(status) {
     case 'good': return 'Dobrý';
     case 'warning': return 'Pozor';
     case 'danger': return 'Kritické';
-    default: return 'Dobrý';
+    case 'unknown': return 'Neznáme';
+    default: return 'Neznáme';
   }
 }
 
 function createTruckCard(truck) {
   const percentage = Math.round((truck.tiresAssigned / truck.totalTires) * 100)
-  const isComplete = truck.tiresAssigned === truck.totalTires
 
   return `
         <div class="vehicle-card" onclick="window.location.href='truck-detail.html?id=${truck.id}'">
@@ -154,11 +162,15 @@ function createTruckCard(truck) {
                     </div>
                 </div>
                 <div class="vehicle-status">
-                    <div class="status-icon ${isComplete ? "complete" : "incomplete"}">
+                    <div class="status-icon ${truck.status || 'unknown'}">
                         ${
-                          isComplete
-                            ? '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>'
-                            : '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v6m0 6v6m11-7h-6m-6 0H1"/></svg>'
+                          truck.status === 'good'
+                            ? '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1-1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>'
+                            : truck.status === 'warning'
+                            ? '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="8" x2="12" y2="13"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>'
+                            : truck.status === 'danger'
+                            ? '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>'
+                            : '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>'
                         }
                     </div>
                 </div>
@@ -166,10 +178,10 @@ function createTruckCard(truck) {
             <div class="progress-bar">
                 <div class="progress-info">
                     <span>Stav pneumatík</span>
-                    <span>${percentage}%</span>
+                    <span>${getStatusText(truck.status)}</span>
                 </div>
                 <div class="progress-track">
-                    <div class="progress-fill ${isComplete ? "complete" : "incomplete"}" style="width: ${percentage}%"></div>
+                    <div class="progress-fill ${truck.status || 'unknown'}" style="width: 100%"></div>
                 </div>
             </div>
         </div>
