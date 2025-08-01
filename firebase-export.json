@@ -1,0 +1,1558 @@
+{
+  "tires": {
+    "0qxElfLNFDBBbtakaIR1": {
+      "dot": "2019",
+      "size": "315/70 R22.5",
+      "customId": "Z1S66666",
+      "km": 290000,
+      "brand": "Continental",
+      "type": "HSC1",
+      "status": "disposed"
+    },
+    "3IYi6E0llEJJpwoPngY9": {
+      "status": "assigned",
+      "customId": "G7H38291",
+      "dot": "2023",
+      "size": "385/65 R22.5",
+      "type": "G159",
+      "brand": "Goodyear",
+      "km": 25000
+    },
+    "3UmWqzAkOJYn0sSaZob1": {
+      "dot": "2020",
+      "brand": "Yokohama",
+      "status": "available",
+      "customId": "P7Q92847",
+      "size": "295/80 R22.5",
+      "type": "104ZR",
+      "km": 235052730
+    },
+    "4NiG5aw3oYIxLKHDBNjw": {
+      "km": 50000,
+      "brand": "Michelin",
+      "type": "XDA2",
+      "dot": "2022",
+      "status": "available",
+      "size": "355/50 R22.5",
+      "customId": "R2V83292"
+    },
+    "7Ruh2AYr1Q5N3x5KObi3": {
+      "brand": "Bridgestone",
+      "type": "M729",
+      "size": "295/75 R22.5",
+      "km": 320000,
+      "status": "disposed",
+      "customId": "Y0R55555",
+      "dot": "2018"
+    },
+    "8dUzoCv3oGsP5duhdTlK": {
+      "size": "295/75 R22.5",
+      "type": "M729",
+      "brand": "Bridgestone",
+      "status": "forSale",
+      "customId": "T5M67890",
+      "km": 170000,
+      "dot": "2020"
+    },
+    "C1yCofwNeQ4BfPVx9HOS": {
+      "size": "385/65 R22.5",
+      "type": "G159",
+      "km": 310000,
+      "status": "disposed",
+      "customId": "A2T77777",
+      "dot": "2018",
+      "brand": "Goodyear"
+    },
+    "JC2xbaEv10iOVNU3n1y1": {
+      "status": "available",
+      "dot": "2021",
+      "size": "295/75 R22.5",
+      "type": "M729",
+      "brand": "Bridgestone",
+      "customId": "B4K92847",
+      "km": 180000
+    },
+    "Lm4RRaxikZ6z0ps5JmgR": {
+      "status": "available",
+      "dot": "2022",
+      "customId": "R2V8XXXXX",
+      "size": "355/50 R22.5",
+      "km": 120000,
+      "brand": "Michelin",
+      "type": "XDA2"
+    },
+    "LwwU5WwgfYYLMHWrPKwo": {
+      "brand": "Pirelli",
+      "customId": "W8P33333",
+      "type": "TH01",
+      "size": "385/55 R22.5",
+      "status": "forSale",
+      "dot": "2021",
+      "km": 165000
+    },
+    "MUFLxeUzYXOw33z404Bh": {
+      "brand": "Michelin",
+      "type": "XDA2",
+      "size": "355/50 R22.5",
+      "customId": "X9Q44444",
+      "km": 280000,
+      "status": "disposed",
+      "dot": "2019"
+    },
+    "VXAEZEDNqccb1qxqW0Cj": {
+      "type": "M729",
+      "size": "295/75 R22.5",
+      "status": "available",
+      "brand": "Bridgestone",
+      "customId": "S9T67890",
+      "dot": "2021",
+      "km": 110000
+    },
+    "WFa4UNE41j5H77SF7LK7": {
+      "type": "G159",
+      "km": 185000,
+      "dot": "2020",
+      "brand": "Goodyear",
+      "customId": "V7O22222",
+      "size": "385/65 R22.5",
+      "status": "forSale"
+    },
+    "XYYjB6RBWqnUKYoYqz1Q": {
+      "customId": "Q8R12345",
+      "brand": "Michelin",
+      "km": 75000,
+      "status": "available",
+      "type": "XDA2",
+      "size": "355/50 R22.5",
+      "dot": "2022"
+    },
+    "XbveA5bYBtohYXpTuFhJ": {
+      "status": "available",
+      "customId": "R2V83252",
+      "size": "355/50 R22.5",
+      "type": "XDA2",
+      "brand": "Michelin",
+      "km": 80000,
+      "dot": "2022"
+    },
+    "daxW4UmhBEwCp05DAhWR": {
+      "customId": "M3N84729",
+      "km": 220000,
+      "size": "385/55 R22.5",
+      "dot": "2022",
+      "type": "TH01",
+      "brand": "Pirelli",
+      "status": "available"
+    },
+    "gabp3YWM1JoY1MkQVN7P": {
+      "customId": "S4L12345",
+      "size": "355/50 R22.5",
+      "brand": "Michelin",
+      "type": "XDA2",
+      "km": 140000,
+      "dot": "2021",
+      "status": "forSale"
+    },
+    "tspwAvBpIlM5Zz4GwhzA": {
+      "dot": "2021",
+      "type": "HSC1",
+      "customId": "U6N11111",
+      "km": 155000,
+      "brand": "Continental",
+      "status": "forSale",
+      "size": "315/70 R22.5"
+    },
+    "u0QS6dYJ78kEAzTwuTYL": {
+      "customId": "W2X34567",
+      "type": "HSC1",
+      "km": 140000,
+      "status": "available",
+      "size": "315/70 R22.5",
+      "dot": "2022",
+      "brand": "Continental"
+    },
+    "uBesNutUy6xYKjJQFUvq": {
+      "km": 160000,
+      "brand": "Continental",
+      "dot": "2022",
+      "type": "HSC1",
+      "size": "315/70 R22.5",
+      "status": "available",
+      "customId": "K9L47382"
+    },
+    "v2QknbNtYbxtmgqcFYd3": {
+      "size": "385/65 R22.5",
+      "dot": "2023",
+      "type": "G159",
+      "km": 35000,
+      "customId": "U1V23456",
+      "status": "available",
+      "brand": "Goodyear"
+    },
+    "vW28SpeUIPAgUHqBJhuF": {
+      "type": "TH01",
+      "size": "385/55 R22.5",
+      "status": "disposed",
+      "km": 275000,
+      "dot": "2019",
+      "customId": "B3U88888",
+      "brand": "Pirelli"
+    }
+  },
+  "trucks": {
+    "AA466SN": {
+      "status": "good",
+      "totalTires": 6,
+      "licensePlate": "AA 466 SN",
+      "tiresAssigned": 1
+    },
+    "AA732GJ": {
+      "licensePlate": "AA 732 GJ",
+      "status": "good",
+      "totalTires": 6,
+      "tiresAssigned": 0
+    },
+    "ZC153BL": {
+      "status": "good",
+      "licensePlate": "ZC 153 BL",
+      "totalTires": 6,
+      "tiresAssigned": 0
+    },
+    "ZC328BL": {
+      "tiresAssigned": 0,
+      "status": "good",
+      "totalTires": 6,
+      "licensePlate": "ZC 328 BL"
+    },
+    "ZC352BP": {
+      "licensePlate": "ZC 352 BP",
+      "tiresAssigned": 0,
+      "totalTires": 0,
+      "status": "good"
+    },
+    "ZC383BL": {
+      "tiresAssigned": 0,
+      "status": "good",
+      "licensePlate": "ZC 383 BL"
+    },
+    "ZC441BV": {
+      "totalTires": 6,
+      "licensePlate": "ZC 441 BV",
+      "tiresAssigned": 0,
+      "status": "good"
+    },
+    "ZC449BV": {
+      "status": "good",
+      "tiresAssigned": 0,
+      "totalTires": 6,
+      "licensePlate": "ZC 449 BV"
+    },
+    "ZC465BS": {
+      "totalTires": 6,
+      "status": "good",
+      "tiresAssigned": 0,
+      "licensePlate": "ZC 465 BS"
+    },
+    "ZC469BS": {
+      "tiresAssigned": 0,
+      "licensePlate": "ZC 469 BS",
+      "status": "good",
+      "totalTires": 6
+    },
+    "ZC491BS": {
+      "licensePlate": "ZC 491 BS",
+      "totalTires": 6,
+      "tiresAssigned": 0,
+      "status": "good"
+    },
+    "ZC675BT": {
+      "status": "good",
+      "tiresAssigned": 0,
+      "licensePlate": "ZC 675 BT",
+      "totalTires": 6
+    },
+    "ZC750BO": {
+      "tiresAssigned": 0,
+      "licensePlate": "ZC 750 BO",
+      "totalTires": 6,
+      "status": "good"
+    },
+    "ZC773BS": {
+      "status": "good",
+      "licensePlate": "ZC 773 BS",
+      "tiresAssigned": 0,
+      "totalTires": 6
+    },
+    "ZC889BS": {
+      "tiresAssigned": 0,
+      "status": "good",
+      "licensePlate": "ZC 889 BS",
+      "totalTires": 6
+    },
+    "ZC970BP": {
+      "status": "good",
+      "tiresAssigned": 0,
+      "totalTires": 6,
+      "licensePlate": "ZC 970 BP"
+    },
+    "ZC974BP": {
+      "totalTires": 6,
+      "licensePlate": "ZC 974 BP",
+      "tiresAssigned": 0,
+      "status": "good"
+    }
+  },
+  "trailers": {
+    "AX5NE6OJfIKrRaWNfND2": {
+      "licensePlate": "TR892KL",
+      "id": "2"
+    },
+    "HJ456NM": {
+      "licensePlate": "HJ 456 NM",
+      "tiresAssigned": 0,
+      "status": "good",
+      "totalTires": 6
+    },
+    "QJaMthm7NGt5qhVEi2vk": {
+      "id": "3",
+      "licensePlate": "HJ456NM"
+    },
+    "TR892KL": {
+      "totalTires": 6,
+      "tiresAssigned": 0,
+      "licensePlate": "TR 892 KL",
+      "status": "good"
+    },
+    "VFmB5QVh3ODH9kAXMjak": {
+      "id": "2",
+      "licensePlate": "TR892KL"
+    },
+    "ZC375YC": {
+      "tiresAssigned": 0,
+      "status": "good",
+      "licensePlate": "ZC 375 YC",
+      "totalTires": 6
+    },
+    "aP0tFtmP9iiCmvRt1zzX": {
+      "id": "1",
+      "licensePlate": "ZC375YC"
+    },
+    "d7pPTiV0PdmKyEAXgr9C": {
+      "licensePlate": "HJ456NM",
+      "id": "3"
+    },
+    "eBbp8sXWhmFPObg4sWMd": {
+      "licensePlate": "ZC375YC",
+      "id": "1"
+    }
+  },
+  "truck_slots": {
+    "AA466SN": {
+      "slots": [
+        {
+          "id": "front-left",
+          "tire": {
+            "size": "295/75 R22.5",
+            "customId": "S9T67890",
+            "brand": "Bridgestone",
+            "id": "VXAEZEDNqccb1qxqW0Cj",
+            "kmOnAssign": 23067,
+            "dot": "2021",
+            "km": 110000,
+            "type": "M729"
+          },
+          "position": "Predné ľavé",
+          "category": "front"
+        },
+        {
+          "tire": null,
+          "id": "front-right",
+          "category": "front",
+          "position": "Predné pravé"
+        },
+        {
+          "id": "rear-left-outer",
+          "tire": null,
+          "category": "rear",
+          "position": "Zadné ľavé vonkajšie"
+        },
+        {
+          "position": "Zadné ľavé vnútorné",
+          "tire": null,
+          "category": "rear",
+          "id": "rear-left-inner"
+        },
+        {
+          "category": "rear",
+          "id": "rear-right-outer",
+          "position": "Zadné pravé vonkajšie",
+          "tire": null
+        },
+        {
+          "id": "rear-right-inner",
+          "category": "rear",
+          "position": "Zadné pravé vnútorné",
+          "tire": null
+        }
+      ]
+    },
+    "AA732GJ": {
+      "slots": [
+        {
+          "tire": null,
+          "category": "front",
+          "position": "Predné ľavé",
+          "id": "front-left"
+        },
+        {
+          "tire": null,
+          "position": "Predné pravé",
+          "id": "front-right",
+          "category": "front"
+        },
+        {
+          "position": "Zadné ľavé vonkajšie",
+          "category": "rear",
+          "tire": null,
+          "id": "rear-left-outer"
+        },
+        {
+          "position": "Zadné ľavé vnútorné",
+          "tire": null,
+          "category": "rear",
+          "id": "rear-left-inner"
+        },
+        {
+          "id": "rear-right-outer",
+          "category": "rear",
+          "tire": null,
+          "position": "Zadné pravé vonkajšie"
+        },
+        {
+          "tire": null,
+          "position": "Zadné pravé vnútorné",
+          "category": "rear",
+          "id": "rear-right-inner"
+        }
+      ]
+    },
+    "ZC153BL": {
+      "slots": [
+        {
+          "tire": null,
+          "position": "Predné ľavé",
+          "category": "front",
+          "id": "front-left"
+        },
+        {
+          "position": "Predné pravé",
+          "tire": null,
+          "category": "front",
+          "id": "front-right"
+        },
+        {
+          "category": "rear",
+          "tire": null,
+          "id": "rear-left-outer",
+          "position": "Zadné ľavé vonkajšie"
+        },
+        {
+          "category": "rear",
+          "position": "Zadné ľavé vnútorné",
+          "id": "rear-left-inner",
+          "tire": null
+        },
+        {
+          "position": "Zadné pravé vonkajšie",
+          "id": "rear-right-outer",
+          "category": "rear",
+          "tire": null
+        },
+        {
+          "id": "rear-right-inner",
+          "position": "Zadné pravé vnútorné",
+          "category": "rear",
+          "tire": null
+        }
+      ]
+    },
+    "ZC282BL": {
+      "slots": [
+        {
+          "category": "front",
+          "position": "Predné ľavé",
+          "id": "front-left",
+          "tire": null
+        },
+        {
+          "tire": null,
+          "position": "Predné pravé",
+          "category": "front",
+          "id": "front-right"
+        },
+        {
+          "tire": null,
+          "id": "rear-left-outer",
+          "category": "rear",
+          "position": "Zadné ľavé vonkajšie"
+        },
+        {
+          "position": "Zadné ľavé vnútorné",
+          "category": "rear",
+          "id": "rear-left-inner",
+          "tire": null
+        },
+        {
+          "category": "rear",
+          "tire": null,
+          "position": "Zadné pravé vonkajšie",
+          "id": "rear-right-outer"
+        },
+        {
+          "position": "Zadné pravé vnútorné",
+          "id": "rear-right-inner",
+          "category": "rear",
+          "tire": null
+        }
+      ]
+    },
+    "ZC328BL": {
+      "slots": [
+        {
+          "tire": null,
+          "category": "front",
+          "id": "front-left",
+          "position": "Predné ľavé"
+        },
+        {
+          "category": "front",
+          "position": "Predné pravé",
+          "tire": null,
+          "id": "front-right"
+        },
+        {
+          "category": "rear",
+          "id": "rear-left-outer",
+          "position": "Zadné ľavé vonkajšie",
+          "tire": null
+        },
+        {
+          "tire": null,
+          "category": "rear",
+          "position": "Zadné ľavé vnútorné",
+          "id": "rear-left-inner"
+        },
+        {
+          "id": "rear-right-outer",
+          "tire": null,
+          "category": "rear",
+          "position": "Zadné pravé vonkajšie"
+        },
+        {
+          "category": "rear",
+          "tire": null,
+          "id": "rear-right-inner",
+          "position": "Zadné pravé vnútorné"
+        }
+      ]
+    },
+    "ZC352BP": {
+      "slots": [
+        {
+          "category": "front",
+          "tire": null,
+          "id": "front-left",
+          "position": "Predné ľavé"
+        },
+        {
+          "position": "Predné pravé",
+          "tire": null,
+          "category": "front",
+          "id": "front-right"
+        },
+        {
+          "tire": null,
+          "position": "Zadné ľavé vonkajšie",
+          "category": "rear",
+          "id": "rear-left-outer"
+        },
+        {
+          "category": "rear",
+          "position": "Zadné ľavé vnútorné",
+          "tire": null,
+          "id": "rear-left-inner"
+        },
+        {
+          "tire": null,
+          "category": "rear",
+          "position": "Zadné pravé vonkajšie",
+          "id": "rear-right-outer"
+        },
+        {
+          "tire": null,
+          "id": "rear-right-inner",
+          "position": "Zadné pravé vnútorné",
+          "category": "rear"
+        }
+      ]
+    },
+    "ZC441BV": {
+      "slots": [
+        {
+          "tire": null,
+          "position": "Predné ľavé",
+          "id": "front-left",
+          "category": "front"
+        },
+        {
+          "id": "front-right",
+          "category": "front",
+          "position": "Predné pravé",
+          "tire": null
+        },
+        {
+          "tire": null,
+          "position": "Zadné ľavé vonkajšie",
+          "id": "rear-left-outer",
+          "category": "rear"
+        },
+        {
+          "position": "Zadné ľavé vnútorné",
+          "category": "rear",
+          "id": "rear-left-inner",
+          "tire": null
+        },
+        {
+          "id": "rear-right-outer",
+          "category": "rear",
+          "position": "Zadné pravé vonkajšie",
+          "tire": null
+        },
+        {
+          "category": "rear",
+          "id": "rear-right-inner",
+          "tire": null,
+          "position": "Zadné pravé vnútorné"
+        }
+      ]
+    },
+    "ZC449BV": {
+      "slots": [
+        {
+          "category": "front",
+          "position": "Predné ľavé",
+          "id": "front-left",
+          "tire": null
+        },
+        {
+          "category": "front",
+          "position": "Predné pravé",
+          "id": "front-right",
+          "tire": null
+        },
+        {
+          "tire": null,
+          "category": "rear",
+          "position": "Zadné ľavé vonkajšie",
+          "id": "rear-left-outer"
+        },
+        {
+          "position": "Zadné ľavé vnútorné",
+          "category": "rear",
+          "tire": null,
+          "id": "rear-left-inner"
+        },
+        {
+          "tire": null,
+          "category": "rear",
+          "id": "rear-right-outer",
+          "position": "Zadné pravé vonkajšie"
+        },
+        {
+          "position": "Zadné pravé vnútorné",
+          "tire": null,
+          "id": "rear-right-inner",
+          "category": "rear"
+        }
+      ]
+    },
+    "ZC465BS": {
+      "slots": [
+        {
+          "position": "Predné ľavé",
+          "tire": null,
+          "category": "front",
+          "id": "front-left"
+        },
+        {
+          "id": "front-right",
+          "tire": null,
+          "category": "front",
+          "position": "Predné pravé"
+        },
+        {
+          "id": "rear-left-outer",
+          "position": "Zadné ľavé vonkajšie",
+          "tire": null,
+          "category": "rear"
+        },
+        {
+          "category": "rear",
+          "position": "Zadné ľavé vnútorné",
+          "id": "rear-left-inner",
+          "tire": null
+        },
+        {
+          "position": "Zadné pravé vonkajšie",
+          "tire": null,
+          "id": "rear-right-outer",
+          "category": "rear"
+        },
+        {
+          "category": "rear",
+          "tire": null,
+          "id": "rear-right-inner",
+          "position": "Zadné pravé vnútorné"
+        }
+      ]
+    },
+    "ZC469BS": {
+      "slots": [
+        {
+          "tire": null,
+          "category": "front",
+          "id": "front-left",
+          "position": "Predné ľavé"
+        },
+        {
+          "position": "Predné pravé",
+          "id": "front-right",
+          "tire": null,
+          "category": "front"
+        },
+        {
+          "position": "Zadné ľavé vonkajšie",
+          "id": "rear-left-outer",
+          "tire": null,
+          "category": "rear"
+        },
+        {
+          "category": "rear",
+          "tire": null,
+          "position": "Zadné ľavé vnútorné",
+          "id": "rear-left-inner"
+        },
+        {
+          "position": "Zadné pravé vonkajšie",
+          "id": "rear-right-outer",
+          "category": "rear",
+          "tire": null
+        },
+        {
+          "category": "rear",
+          "tire": null,
+          "id": "rear-right-inner",
+          "position": "Zadné pravé vnútorné"
+        }
+      ]
+    },
+    "ZC491BS": {
+      "slots": [
+        {
+          "category": "front",
+          "tire": null,
+          "position": "Predné ľavé",
+          "id": "front-left"
+        },
+        {
+          "position": "Predné pravé",
+          "tire": null,
+          "id": "front-right",
+          "category": "front"
+        },
+        {
+          "position": "Zadné ľavé vonkajšie",
+          "tire": null,
+          "id": "rear-left-outer",
+          "category": "rear"
+        },
+        {
+          "tire": null,
+          "id": "rear-left-inner",
+          "position": "Zadné ľavé vnútorné",
+          "category": "rear"
+        },
+        {
+          "tire": null,
+          "category": "rear",
+          "id": "rear-right-outer",
+          "position": "Zadné pravé vonkajšie"
+        },
+        {
+          "id": "rear-right-inner",
+          "category": "rear",
+          "tire": null,
+          "position": "Zadné pravé vnútorné"
+        }
+      ]
+    },
+    "ZC675BT": {
+      "slots": [
+        {
+          "category": "front",
+          "position": "Predné ľavé",
+          "id": "front-left",
+          "tire": null
+        },
+        {
+          "position": "Predné pravé",
+          "id": "front-right",
+          "tire": null,
+          "category": "front"
+        },
+        {
+          "category": "rear",
+          "id": "rear-left-outer",
+          "tire": null,
+          "position": "Zadné ľavé vonkajšie"
+        },
+        {
+          "id": "rear-left-inner",
+          "position": "Zadné ľavé vnútorné",
+          "tire": null,
+          "category": "rear"
+        },
+        {
+          "category": "rear",
+          "tire": null,
+          "position": "Zadné pravé vonkajšie",
+          "id": "rear-right-outer"
+        },
+        {
+          "id": "rear-right-inner",
+          "category": "rear",
+          "tire": null,
+          "position": "Zadné pravé vnútorné"
+        }
+      ]
+    },
+    "ZC750BO": {
+      "slots": [
+        {
+          "id": "front-left",
+          "category": "front",
+          "position": "Predné ľavé",
+          "tire": null
+        },
+        {
+          "tire": null,
+          "position": "Predné pravé",
+          "category": "front",
+          "id": "front-right"
+        },
+        {
+          "position": "Zadné ľavé vonkajšie",
+          "id": "rear-left-outer",
+          "category": "rear",
+          "tire": null
+        },
+        {
+          "category": "rear",
+          "position": "Zadné ľavé vnútorné",
+          "id": "rear-left-inner",
+          "tire": null
+        },
+        {
+          "position": "Zadné pravé vonkajšie",
+          "id": "rear-right-outer",
+          "tire": null,
+          "category": "rear"
+        },
+        {
+          "position": "Zadné pravé vnútorné",
+          "id": "rear-right-inner",
+          "tire": null,
+          "category": "rear"
+        }
+      ]
+    },
+    "ZC773BS": {
+      "slots": [
+        {
+          "position": "Predné ľavé",
+          "tire": null,
+          "id": "front-left",
+          "category": "front"
+        },
+        {
+          "position": "Predné pravé",
+          "id": "front-right",
+          "tire": null,
+          "category": "front"
+        },
+        {
+          "category": "rear",
+          "tire": null,
+          "id": "rear-left-outer",
+          "position": "Zadné ľavé vonkajšie"
+        },
+        {
+          "id": "rear-left-inner",
+          "category": "rear",
+          "position": "Zadné ľavé vnútorné",
+          "tire": null
+        },
+        {
+          "tire": null,
+          "category": "rear",
+          "id": "rear-right-outer",
+          "position": "Zadné pravé vonkajšie"
+        },
+        {
+          "category": "rear",
+          "tire": null,
+          "position": "Zadné pravé vnútorné",
+          "id": "rear-right-inner"
+        }
+      ]
+    },
+    "ZC889BS": {
+      "slots": [
+        {
+          "id": "front-left",
+          "category": "front",
+          "tire": null,
+          "position": "Predné ľavé"
+        },
+        {
+          "id": "front-right",
+          "tire": null,
+          "position": "Predné pravé",
+          "category": "front"
+        },
+        {
+          "position": "Zadné ľavé vonkajšie",
+          "tire": null,
+          "category": "rear",
+          "id": "rear-left-outer"
+        },
+        {
+          "position": "Zadné ľavé vnútorné",
+          "category": "rear",
+          "id": "rear-left-inner",
+          "tire": null
+        },
+        {
+          "position": "Zadné pravé vonkajšie",
+          "category": "rear",
+          "tire": null,
+          "id": "rear-right-outer"
+        },
+        {
+          "category": "rear",
+          "position": "Zadné pravé vnútorné",
+          "id": "rear-right-inner",
+          "tire": null
+        }
+      ]
+    },
+    "ZC970BP": {
+      "slots": [
+        {
+          "category": "front",
+          "tire": null,
+          "id": "front-left",
+          "position": "Predné ľavé"
+        },
+        {
+          "category": "front",
+          "tire": null,
+          "id": "front-right",
+          "position": "Predné pravé"
+        },
+        {
+          "tire": null,
+          "id": "rear-left-outer",
+          "position": "Zadné ľavé vonkajšie",
+          "category": "rear"
+        },
+        {
+          "id": "rear-left-inner",
+          "category": "rear",
+          "tire": null,
+          "position": "Zadné ľavé vnútorné"
+        },
+        {
+          "position": "Zadné pravé vonkajšie",
+          "id": "rear-right-outer",
+          "category": "rear",
+          "tire": null
+        },
+        {
+          "position": "Zadné pravé vnútorné",
+          "id": "rear-right-inner",
+          "category": "rear",
+          "tire": null
+        }
+      ]
+    },
+    "ZC974BP": {
+      "slots": [
+        {
+          "category": "front",
+          "position": "Predné ľavé",
+          "id": "front-left",
+          "tire": null
+        },
+        {
+          "position": "Predné pravé",
+          "id": "front-right",
+          "category": "front",
+          "tire": null
+        },
+        {
+          "position": "Zadné ľavé vonkajšie",
+          "id": "rear-left-outer",
+          "category": "rear",
+          "tire": null
+        },
+        {
+          "id": "rear-left-inner",
+          "tire": null,
+          "category": "rear",
+          "position": "Zadné ľavé vnútorné"
+        },
+        {
+          "position": "Zadné pravé vonkajšie",
+          "category": "rear",
+          "id": "rear-right-outer",
+          "tire": null
+        },
+        {
+          "position": "Zadné pravé vnútorné",
+          "id": "rear-right-inner",
+          "tire": null,
+          "category": "rear"
+        }
+      ]
+    }
+  },
+  "trailer_slots": {
+    "2": {
+      "slots": [
+        {
+          "id": "left-front",
+          "position": "Ľavé predné",
+          "tire": null
+        },
+        {
+          "position": "Ľavé stredné",
+          "id": "left-middle",
+          "tire": null
+        },
+        {
+          "position": "Ľavé zadné",
+          "id": "left-rear",
+          "tire": null
+        },
+        {
+          "position": "Pravé predné",
+          "id": "right-front",
+          "tire": null
+        },
+        {
+          "tire": null,
+          "position": "Pravé stredné",
+          "id": "right-middle"
+        },
+        {
+          "id": "right-rear",
+          "tire": null,
+          "position": "Pravé zadné"
+        }
+      ]
+    },
+    "HJ456NM": {
+      "slots": [
+        {
+          "position": "Ľavé predné",
+          "tire": null,
+          "id": "left-front"
+        },
+        {
+          "position": "Ľavé stredné",
+          "tire": null,
+          "id": "left-middle"
+        },
+        {
+          "id": "left-rear",
+          "position": "Ľavé zadné",
+          "tire": null
+        },
+        {
+          "position": "Pravé predné",
+          "id": "right-front",
+          "tire": null
+        },
+        {
+          "tire": null,
+          "position": "Pravé stredné",
+          "id": "right-middle"
+        },
+        {
+          "tire": null,
+          "position": "Pravé zadné",
+          "id": "right-rear"
+        }
+      ]
+    },
+    "TR892KL": {
+      "slots": [
+        {
+          "id": "left-front",
+          "tire": null,
+          "position": "Ľavé predné"
+        },
+        {
+          "id": "left-middle",
+          "tire": null,
+          "position": "Ľavé stredné"
+        },
+        {
+          "id": "left-rear",
+          "position": "Ľavé zadné",
+          "tire": null
+        },
+        {
+          "id": "right-front",
+          "position": "Pravé predné",
+          "tire": null
+        },
+        {
+          "position": "Pravé stredné",
+          "id": "right-middle",
+          "tire": null
+        },
+        {
+          "tire": null,
+          "id": "right-rear",
+          "position": "Pravé zadné"
+        }
+      ]
+    },
+    "ZC375YC": {
+      "slots": [
+        {
+          "id": "left-front",
+          "tire": null,
+          "position": "Ľavé predné"
+        },
+        {
+          "position": "Ľavé stredné",
+          "tire": null,
+          "id": "left-middle"
+        },
+        {
+          "position": "Ľavé zadné",
+          "tire": null,
+          "id": "left-rear"
+        },
+        {
+          "id": "right-front",
+          "tire": null,
+          "position": "Pravé predné"
+        },
+        {
+          "id": "right-middle",
+          "tire": null,
+          "position": "Pravé stredné"
+        },
+        {
+          "tire": null,
+          "position": "Pravé zadné",
+          "id": "right-rear"
+        }
+      ]
+    }
+  },
+  "vehicles_km": {
+    "AA466SN": {
+      "timestamp": {
+        "seconds": 1754062263,
+        "nanoseconds": 940728000
+      },
+      "kilometers": 230670
+    },
+    "AA732GJ": {
+      "timestamp": {
+        "seconds": 1754062263,
+        "nanoseconds": 941735000
+      },
+      "kilometers": 28960
+    },
+    "BL040EE": {
+      "timestamp": {
+        "seconds": 1754062263,
+        "nanoseconds": 940728000
+      },
+      "kilometers": 257725
+    },
+    "EL449AR": {
+      "kilometers": 0,
+      "timestamp": {
+        "seconds": 1754062263,
+        "nanoseconds": 940728000
+      }
+    },
+    "VZV": {
+      "kilometers": 0,
+      "timestamp": {
+        "seconds": 1754062263,
+        "nanoseconds": 941735000
+      }
+    },
+    "VZV2": {
+      "timestamp": {
+        "seconds": 1754062263,
+        "nanoseconds": 941735000
+      },
+      "kilometers": 0
+    },
+    "ZC153BL": {
+      "timestamp": {
+        "seconds": 1754062263,
+        "nanoseconds": 935194000
+      },
+      "kilometers": 821275
+    },
+    "ZC206YD": {
+      "kilometers": 20660,
+      "timestamp": {
+        "seconds": 1754062263,
+        "nanoseconds": 935194000
+      }
+    },
+    "ZC212YC": {
+      "timestamp": {
+        "seconds": 1754062263,
+        "nanoseconds": 940728000
+      },
+      "kilometers": 230550
+    },
+    "ZC235YC": {
+      "timestamp": {
+        "seconds": 1754062263,
+        "nanoseconds": 933667000
+      },
+      "kilometers": 1427515
+    },
+    "ZC237YC": {
+      "kilometers": 1263197,
+      "timestamp": {
+        "seconds": 1754062263,
+        "nanoseconds": 934186000
+      }
+    },
+    "ZC241BP": {
+      "kilometers": 0,
+      "timestamp": {
+        "seconds": 1754062263,
+        "nanoseconds": 940728000
+      }
+    },
+    "ZC278YC": {
+      "timestamp": {
+        "seconds": 1754062263,
+        "nanoseconds": 940728000
+      },
+      "kilometers": 178155
+    },
+    "ZC291YD": {
+      "kilometers": 514281,
+      "timestamp": {
+        "seconds": 1754062263,
+        "nanoseconds": 936677000
+      }
+    },
+    "ZC298YC": {
+      "timestamp": {
+        "seconds": 1754062263,
+        "nanoseconds": 941735000
+      },
+      "kilometers": 15897
+    },
+    "ZC324BL": {
+      "kilometers": 295933,
+      "timestamp": {
+        "seconds": 1754062263,
+        "nanoseconds": 935194000
+      }
+    },
+    "ZC328BL": {
+      "kilometers": 745694,
+      "timestamp": {
+        "seconds": 1754062263,
+        "nanoseconds": 935194000
+      }
+    },
+    "ZC336YD": {
+      "timestamp": {
+        "seconds": 1754062263,
+        "nanoseconds": 936677000
+      },
+      "kilometers": 494412
+    },
+    "ZC352BP": {
+      "kilometers": 634030,
+      "timestamp": {
+        "seconds": 1754062263,
+        "nanoseconds": 935194000
+      }
+    },
+    "ZC375YC": {
+      "kilometers": 1341598,
+      "timestamp": {
+        "seconds": 1754062263,
+        "nanoseconds": 934186000
+      }
+    },
+    "ZC383BL": {
+      "timestamp": {
+        "seconds": 1754062263,
+        "nanoseconds": 935194000
+      },
+      "kilometers": 830865
+    },
+    "ZC388BS": {
+      "kilometers": 0,
+      "timestamp": {
+        "seconds": 1754062263,
+        "nanoseconds": 936677000
+      }
+    },
+    "ZC388YC": {
+      "timestamp": {
+        "seconds": 1754062263,
+        "nanoseconds": 934186000
+      },
+      "kilometers": 1260629
+    },
+    "ZC390YC": {
+      "kilometers": 197298,
+      "timestamp": {
+        "seconds": 1754062263,
+        "nanoseconds": 940728000
+      }
+    },
+    "ZC397YD": {
+      "timestamp": {
+        "seconds": 1754062263,
+        "nanoseconds": 936677000
+      },
+      "kilometers": 367022
+    },
+    "ZC398YC": {
+      "kilometers": 1250017,
+      "timestamp": {
+        "seconds": 1754062263,
+        "nanoseconds": 935194000
+      }
+    },
+    "ZC421YD": {
+      "timestamp": {
+        "seconds": 1754062263,
+        "nanoseconds": 936677000
+      },
+      "kilometers": 349268
+    },
+    "ZC426YD": {
+      "kilometers": 253337,
+      "timestamp": {
+        "seconds": 1754062263,
+        "nanoseconds": 936677000
+      }
+    },
+    "ZC441BV": {
+      "kilometers": 354623,
+      "timestamp": {
+        "seconds": 1754062263,
+        "nanoseconds": 940222000
+      }
+    },
+    "ZC441YD": {
+      "kilometers": 397311,
+      "timestamp": {
+        "seconds": 1754062263,
+        "nanoseconds": 936677000
+      }
+    },
+    "ZC449BV": {
+      "kilometers": 354191,
+      "timestamp": {
+        "seconds": 1754062263,
+        "nanoseconds": 940728000
+      }
+    },
+    "ZC451YD": {
+      "timestamp": {
+        "seconds": 1754062263,
+        "nanoseconds": 939711000
+      },
+      "kilometers": 391919
+    },
+    "ZC460YC": {
+      "kilometers": 1145110,
+      "timestamp": {
+        "seconds": 1754062263,
+        "nanoseconds": 935194000
+      }
+    },
+    "ZC465BS": {
+      "timestamp": {
+        "seconds": 1754062263,
+        "nanoseconds": 940728000
+      },
+      "kilometers": 260375
+    },
+    "ZC469BS": {
+      "timestamp": {
+        "seconds": 1754062263,
+        "nanoseconds": 940728000
+      },
+      "kilometers": 242150
+    },
+    "ZC491BS": {
+      "timestamp": {
+        "seconds": 1754062263,
+        "nanoseconds": 936677000
+      },
+      "kilometers": 764429
+    },
+    "ZC594BN": {
+      "kilometers": 34645,
+      "timestamp": {
+        "seconds": 1754062263,
+        "nanoseconds": 935194000
+      }
+    },
+    "ZC595YB": {
+      "timestamp": {
+        "seconds": 1754062263,
+        "nanoseconds": 934186000
+      },
+      "kilometers": 31885
+    },
+    "ZC598YD": {
+      "kilometers": 218635,
+      "timestamp": {
+        "seconds": 1754062263,
+        "nanoseconds": 940728000
+      }
+    },
+    "ZC603YD": {
+      "timestamp": {
+        "seconds": 1754062263,
+        "nanoseconds": 940728000
+      },
+      "kilometers": 259342
+    },
+    "ZC645YB": {
+      "timestamp": {
+        "seconds": 1754062263,
+        "nanoseconds": 934186000
+      },
+      "kilometers": 6220
+    },
+    "ZC675BT": {
+      "kilometers": 530240,
+      "timestamp": {
+        "seconds": 1754062263,
+        "nanoseconds": 940222000
+      }
+    },
+    "ZC685BP": {
+      "timestamp": {
+        "seconds": 1754062263,
+        "nanoseconds": 935194000
+      },
+      "kilometers": 110387
+    },
+    "ZC750BO": {
+      "timestamp": {
+        "seconds": 1754062263,
+        "nanoseconds": 935194000
+      },
+      "kilometers": 732967
+    },
+    "ZC773BS": {
+      "timestamp": {
+        "seconds": 1754062263,
+        "nanoseconds": 936677000
+      },
+      "kilometers": 483664
+    },
+    "ZC859BR": {
+      "kilometers": 171945,
+      "timestamp": {
+        "seconds": 1754062263,
+        "nanoseconds": 936677000
+      }
+    },
+    "ZC889BS": {
+      "timestamp": {
+        "seconds": 1754062263,
+        "nanoseconds": 936677000
+      },
+      "kilometers": 369382
+    },
+    "ZC954BA": {
+      "kilometers": 270697,
+      "timestamp": {
+        "seconds": 1754062263,
+        "nanoseconds": 934186000
+      }
+    },
+    "ZC970BP": {
+      "kilometers": 818811,
+      "timestamp": {
+        "seconds": 1754062263,
+        "nanoseconds": 935194000
+      }
+    },
+    "ZC974BP": {
+      "timestamp": {
+        "seconds": 1754062263,
+        "nanoseconds": 935194000
+      },
+      "kilometers": 866759
+    },
+    "ZCZ086": {
+      "kilometers": 0,
+      "timestamp": {
+        "seconds": 1754062263,
+        "nanoseconds": 941735000
+      }
+    },
+    "ZH667CP": {
+      "kilometers": 287044,
+      "timestamp": {
+        "seconds": 1754062263,
+        "nanoseconds": 934186000
+      }
+    },
+    "kompresor": {
+      "timestamp": {
+        "seconds": 1754062263,
+        "nanoseconds": 935194000
+      },
+      "kilometers": 0
+    },
+    "zeriav": {
+      "timestamp": {
+        "seconds": 1754062263,
+        "nanoseconds": 941735000
+      },
+      "kilometers": 0
+    }
+  }
+}

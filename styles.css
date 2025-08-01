@@ -411,8 +411,7 @@ body {
 
 /* Cards */
 .tire-card,
-.vehicle-card,
-.tire-slot-card {
+.vehicle-card {
   background: rgba(255, 255, 255, 0.8);
   backdrop-filter: blur(10px);
   border-radius: 1rem;
@@ -704,94 +703,228 @@ body {
 
 /* Tire Slots */
 .tire-slot-card {
-  text-align: center;
-  cursor: default;
+    background: #ffffff;
+    border-radius: 1.25rem;
+    box-shadow: 0 8px 25px -5px rgba(0, 0, 0, 0.05), 0 4px 15px -6px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e5e7eb;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transition: all 0.3s;
 }
 
-.tire-slot-card h3 {
-  font-weight: 600;
-  color: #1f2937;
-  margin-bottom: 0.75rem;
-  font-size: 0.875rem;
+.tire-slot-header {
+    padding: 0.75rem 1rem;
+    background: #f9fafb;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.tire-slot-header h3 {
+    font-weight: 600;
+    color: #374151;
+    font-size: 0.875rem;
+    text-align: center;
 }
 
 .tire-slot-content {
-  margin-bottom: 0.75rem;
+    flex-grow: 1;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
-.assigned-tire {
-  padding: 0.75rem;
-  background: linear-gradient(135deg, #dcfce7, #bbf7d0);
-  border: 1px solid #86efac;
-  border-radius: 1rem;
+.assigned-tire-new {
+    text-align: center;
 }
 
-.assigned-tire p {
-  margin-bottom: 0.25rem;
+.tire-brand-new {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #1f2937;
 }
 
-.assigned-tire .tire-brand {
-  font-weight: 700;
-  color: #166534;
+.tire-brand-new strong {
+    font-weight: 800;
 }
 
-.assigned-tire .tire-size {
-  color: #16a34a;
-  font-size: 0.75rem;
+.tire-size-new {
+    font-size: 0.8rem;
+    color: #6b7280;
+    margin-bottom: 0.5rem;
 }
 
-.assigned-tire .tire-id {
-  color: #15803d;
-  font-size: 0.75rem;
-  font-family: "Courier New", monospace;
+.tire-details-grid-new {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.tire-detail-item-new {
+    background: #f3f4f6;
+    border-radius: 0.5rem;
+    padding: 0.3rem 0.5rem;
+}
+
+.detail-label-new {
+    display: block;
+    font-size: 0.6rem;
+    font-weight: 600;
+    color: #6b7280;
+    text-transform: uppercase;
+}
+
+.detail-value-new {
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #1f2937;
+    font-family: "Courier New", monospace;
+}
+
+.tire-km-new {
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    border-radius: 0.75rem;
+    padding: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.tire-km-new.status-red {
+    background: #fee2e2;
+    border-color: #fecaca;
+}
+
+.tire-km-new.status-red .km-label {
+    color: #b91c1c;
+}
+
+.tire-km-new.status-red .km-value {
+    color: #991b1b;
+}
+
+.tire-km-new.status-orange {
+    background: #ffedd5;
+    border-color: #fed7aa;
+}
+
+.tire-km-new.status-orange .km-label {
+    color: #9a3412;
+}
+
+.tire-km-new.status-orange .km-value {
+    color: #7c2d12;
+}
+
+.tire-km-new.status-green {
+    background: #f0fdf4;
+    border-color: #bbf7d0;
+}
+
+.tire-km-new.status-green .km-label {
+    color: #166534;
+}
+
+.tire-km-new.status-green .km-value {
+    color: #15803d;
+}
+
+.km-label {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: #166534;
+}
+
+.km-value {
+    display: block;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #15803d;
 }
 
 .empty-slot {
-  padding: 1.5rem;
-  border: 2px dashed #d1d5db;
-  border-radius: 1rem;
-  background: #f9fafb;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem 1rem;
+    text-align: center;
+    border: 2px dashed #d1d5db;
+    border-radius: 1rem;
+    background: #f9fafb;
+    height: 100%;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.empty-slot:hover {
+    background: #eff6ff;
+    border-color: #93c5fd;
+}
+
+.empty-slot-icon {
+    color: #9ca3af;
+    margin-bottom: 0.5rem;
+    transition: all 0.2s;
+}
+
+.empty-slot:hover .empty-slot-icon {
+    color: #3b82f6;
 }
 
 .empty-slot-text {
-  color: #9ca3af;
-  font-size: 0.75rem;
+    color: #9ca3af;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: all 0.2s;
 }
 
-.slot-btn {
-  width: 100%;
-  padding: 0.5rem 1rem;
-  border-radius: 0.75rem;
-  font-size: 0.875rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.25rem;
+.empty-slot:hover .empty-slot-text {
+    color: #3b82f6;
 }
 
-.assign-btn {
-  background: #eff6ff;
-  border: 1px solid #bfdbfe;
-  color: #3b82f6;
+.tire-slot-footer {
+    padding: 0.75rem;
+    background: #fff;
+    border-top: 1px solid #e5e7eb;
 }
 
-.assign-btn:hover {
-  background: #dbeafe;
-  border-color: #93c5fd;
+.slot-btn-new {
+    width: 100%;
+    padding: 0.6rem 1rem;
+    border-radius: 0.75rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border: 1px solid transparent;
 }
 
-.remove-btn {
-  background: white;
-  border: 1px solid #fecaca;
-  color: #ef4444;
+.assign-btn-new {
+    background: #3b82f6;
+    color: white;
+    box-shadow: 0 4px 14px -4px rgba(59, 130, 246, 0.4);
 }
 
-.remove-btn:hover {
-  background: #fef2f2;
-  border-color: #fca5a5;
+.assign-btn-new:hover {
+    background: #2563eb;
+}
+
+.remove-btn-new {
+    background: #fee2e2;
+    color: #ef4444;
+    border: 1px solid #fecaca;
+}
+
+.remove-btn-new:hover {
+    background: #fca5a5;
+    color: #b91c1c;
 }
 
 /* Bottom Navigation */
@@ -1048,6 +1181,47 @@ body {
 .tire-option-details {
   font-size: 0.875rem;
   color: #6b7280;
+}
+
+/* Storage Options Modal */
+.storage-options {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+}
+
+.storage-option-btn {
+    padding: 1rem;
+    border-radius: 0.75rem;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: 1px solid #d1d5db;
+    background: #f9fafb;
+    color: #374151;
+}
+
+.storage-option-btn:hover {
+    background: #eff6ff;
+    border-color: #93c5fd;
+    color: #2563eb;
+}
+
+.btn-secondary {
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.75rem;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: 1px solid #d1d5db;
+    background: #fff;
+    color: #374151;
+}
+
+.btn-secondary:hover {
+    background: #f3f4f6;
 }
 
 /* --- Skupina pneumatík detail modal --- */

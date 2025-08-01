@@ -42,16 +42,29 @@ const sampleData = {
   ],
   
   trucks: [
-    { id: "1", licensePlate: "ZC153BL" },
-    { id: "2", licensePlate: "AB789CD" },
-    { id: "3", licensePlate: "XY456EF" },
-    { id: "4", licensePlate: "MN123GH" },
+    { licensePlate: "AA 466 SN" },
+    { licensePlate: "AA 732 GJ" },
+    { licensePlate: "ZC 153 BL" },
+    { licensePlate: "ZC 328 BL" },
+    { licensePlate: "ZC 352 BP" },
+    { licensePlate: "ZC 282 BL" },
+    { licensePlate: "ZC 441 BV" },
+    { licensePlate: "ZC 449 BV" },
+    { licensePlate: "ZC 465 BS" },
+    { licensePlate: "ZC 469 BS" },
+    { licensePlate: "ZC 491 BS" },
+    { licensePlate: "ZC 675 BT" },
+    { licensePlate: "ZC 750 BO" },
+    { licensePlate: "ZC 773 BS" },
+    { licensePlate: "ZC 889 BS" },
+    { licensePlate: "ZC 970 BP" },
+    { licensePlate: "ZC 974 BP" }
   ],
   
   trailers: [
-    { id: "1", licensePlate: "ZC375YC" },
-    { id: "2", licensePlate: "TR892KL" },
-    { id: "3", licensePlate: "HJ456NM" },
+    { licensePlate: "ZC 375 YC" },
+    { licensePlate: "TR 892 KL" },
+    { licensePlate: "HJ 456 NM" },
   ],
 
   // Slot konfigurácie pre autá (6 slotov)
@@ -109,14 +122,16 @@ async function migrateData() {
     // Vytvorím sloty pre autá
     console.log('Vytváram sloty pre autá...');
     for (const truck of sampleData.trucks) {
-      await DatabaseService.updateTireSlots('truck', truck.id, sampleData.truckSlots);
+      const truckId = truck.licensePlate.replace(/\s/g, '');
+      await DatabaseService.updateTireSlots('truck', truckId, sampleData.truckSlots);
       console.log(`Vytvorené sloty pre auto: ${truck.licensePlate}`);
     }
 
     // Vytvorím sloty pre prívesy
     console.log('Vytváram sloty pre prívesy...');
     for (const trailer of sampleData.trailers) {
-      await DatabaseService.updateTireSlots('trailer', trailer.id, sampleData.trailerSlots);
+      const trailerId = trailer.licensePlate.replace(/\s/g, '');
+      await DatabaseService.updateTireSlots('trailer', trailerId, sampleData.trailerSlots);
       console.log(`Vytvorené sloty pre príves: ${trailer.licensePlate}`);
     }
 
@@ -131,20 +146,20 @@ async function migrateData() {
     truck1Slots[3].tire = addedTires[3]; // 75k km
     truck1Slots[4].tire = addedTires[4]; // 35k km
     truck1Slots[5].tire = addedTires[5]; // 140k km
-    await DatabaseService.updateTireSlots('truck', '1', truck1Slots);
+    await DatabaseService.updateTireSlots('truck', 'ZC153BL', truck1Slots);
     
-    // Auto 2 (AB789CD) - Oranžové (aspoň jedna 150k-200k km)
+    // Auto 2 (AA732GJ) - Oranžové (aspoň jedna 150k-200k km)
     const truck2Slots = [...sampleData.truckSlots];
     truck2Slots[0].tire = addedTires[6]; // 180k km (oranžová)
     truck2Slots[1].tire = addedTires[7]; // 110k km
     truck2Slots[2].tire = addedTires[8]; // 160k km (oranžová)
-    await DatabaseService.updateTireSlots('truck', '2', truck2Slots);
+    await DatabaseService.updateTireSlots('truck', 'AA732GJ', truck2Slots);
     
-    // Auto 3 (XY456EF) - Červené (aspoň jedna nad 200k km)
+    // Auto 3 (ZC328BL) - Červené (aspoň jedna nad 200k km)
     const truck3Slots = [...sampleData.truckSlots];
     truck3Slots[0].tire = addedTires[9]; // 220k km (červená)
     truck3Slots[1].tire = addedTires[10]; // 95k km
-    await DatabaseService.updateTireSlots('truck', '3', truck3Slots);
+    await DatabaseService.updateTireSlots('truck', 'ZC328BL', truck3Slots);
     
     // Príves 1 (ZC375YC) - Zelené (všetky pod 150k km)
     const trailer1Slots = [...sampleData.trailerSlots];
@@ -153,24 +168,24 @@ async function migrateData() {
     trailer1Slots[2].tire = addedTires[2]; // 120k km
     trailer1Slots[3].tire = addedTires[3]; // 75k km
     trailer1Slots[4].tire = addedTires[4]; // 35k km
-    await DatabaseService.updateTireSlots('trailer', '1', trailer1Slots);
+    await DatabaseService.updateTireSlots('trailer', 'ZC375YC', trailer1Slots);
     
     // Príves 2 (TR892KL) - Oranžové (aspoň jedna 150k-200k km)
     const trailer2Slots = [...sampleData.trailerSlots];
     trailer2Slots[0].tire = addedTires[6]; // 180k km (oranžová)
     trailer2Slots[1].tire = addedTires[7]; // 110k km
-    await DatabaseService.updateTireSlots('trailer', '2', trailer2Slots);
+    await DatabaseService.updateTireSlots('trailer', 'TR892KL', trailer2Slots);
     
     // Príves 3 (HJ456NM) - Červené (aspoň jedna nad 200k km)
     const trailer3Slots = [...sampleData.trailerSlots];
     trailer3Slots[0].tire = addedTires[9]; // 220k km (červená)
-    await DatabaseService.updateTireSlots('trailer', '3', trailer3Slots);
+    await DatabaseService.updateTireSlots('trailer', 'HJ456NM', trailer3Slots);
     
     console.log('Migrácia dát bola úspešne dokončená!');
     console.log('Ukážkové dáta:');
     console.log('- Auto ZC153BL: 6/6 pneumatík (ZELENÉ - všetky pod 150k km)');
-    console.log('- Auto AB789CD: 3/6 pneumatík (ORANŽOVÉ - aspoň jedna 150k-200k km)');
-    console.log('- Auto XY456EF: 2/6 pneumatík (ČERVENÉ - aspoň jedna nad 200k km)');
+    console.log('- Auto AA732GJ: 3/6 pneumatík (ORANŽOVÉ - aspoň jedna 150k-200k km)');
+    console.log('- Auto ZC328BL: 2/6 pneumatík (ČERVENÉ - aspoň jedna nad 200k km)');
     console.log('- Príves ZC375YC: 5/6 pneumatík (ZELENÉ - všetky pod 150k km)');
     console.log('- Príves TR892KL: 2/6 pneumatík (ORANŽOVÉ - aspoň jedna 150k-200k km)');
     console.log('- Príves HJ456NM: 1/6 pneumatík (ČERVENÉ - aspoň jedna nad 200k km)');
@@ -231,4 +246,4 @@ async function clearAllData() {
 window.migrateData = migrateData;
 window.clearAllData = clearAllData;
 
-console.log('Migračný skript načítaný. Použite migrateData() na naplnenie ukážkovými dátami, alebo clearAllData() na vymazanie všetkých dát.'); 
+console.log('Migračný skript načítaný. Použite migrateData() na naplnenie ukážkovými dátami, alebo clearAllData() na vymazanie všetkých dát.');

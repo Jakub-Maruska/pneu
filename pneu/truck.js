@@ -5,6 +5,8 @@ if (localStorage.getItem("isLoggedIn") !== "true") {
 
 // Global trucks array
 let trucks = []
+let allKms = {}
+let allSlots = {}
 
 // DOM elements
 let truckGrid, goodCount, warningCount, dangerCount
@@ -12,28 +14,18 @@ let truckGrid, goodCount, warningCount, dangerCount
 // Load trucks from database
 async function loadTrucks() {
   try {
-    trucks = await DatabaseService.getTrucks()
-    
-    // Pre každé auto načítam sloty a vypočítam aktuálny počet pneumatík a status
-    for (let truck of trucks) {
-      try {
-        const slots = await DatabaseService.getTireSlots('truck', truck.id)
-        const assignedCount = slots.filter(slot => slot.tire).length
-        const totalSlots = slots.length
-        
-        // Aktualizujem truck objekt s aktuálnymi hodnotami
-        truck.tiresAssigned = assignedCount
-        truck.totalTires = totalSlots
-        
-        // Vypočítam status podľa kilometrov pneumatík
-        truck.status = calculateVehicleStatus(slots)
-      } catch (error) {
-        console.error(`Error loading slots for truck ${truck.id}:`, error)
-        truck.tiresAssigned = 0
-        truck.totalTires = 6 // Predvolený počet slotov
-        truck.status = 'good' // Predvolený status
-      }
-    }
+    // --- OPTIMIZATION: Load all data in parallel ---
+    const [trucksData, kmsData, slotsData] = await Promise.all([
+      DatabaseService.getTrucks(),
+      DatabaseService.getAllVehicleKms(),
+      DatabaseService.getAllTireSlots('truck')
+    ]);
+
+    trucks = trucksData;
+    allKms = kmsData;
+    allSlots = slotsData;
+
+    processTruckData();
     
     renderTrucks()
     updateStats()
@@ -44,25 +36,44 @@ async function loadTrucks() {
   }
 }
 
+// --- OPTIMIZATION: Centralized data processing ---
+function processTruckData() {
+  trucks.forEach(truck => {
+    const vehicleKm = allKms[truck.id] || 0;
+    const slots = allSlots[truck.id] || [];
+    const assignedCount = slots.filter(slot => slot.tire).length;
+    const totalSlots = slots.length > 0 ? slots.length : 6; // Default to 6 if no slots defined
+
+    truck.kilometers = vehicleKm;
+    truck.tiresAssigned = assignedCount;
+    truck.totalTires = totalSlots;
+    truck.status = calculateVehicleStatus(slots, vehicleKm);
+  });
+}
+
 // Calculate vehicle status based on tire kilometers
-function calculateVehicleStatus(vehicleSlots) {
-  const assignedTires = vehicleSlots.filter(slot => slot.tire && slot.tire.km !== undefined);
+function calculateVehicleStatus(vehicleSlots, vehicleKm) {
+  const assignedTires = vehicleSlots.filter(slot => slot.tire);
   
   if (assignedTires.length === 0) {
     return 'unknown'; // No tires assigned, status is unknown
   }
+
+  const currentTireKms = assignedTires.map(slot => {
+    const tireKm = slot.tire.km || 0;
+    const kmOnAssign = slot.tire.kmOnAssign !== undefined ? slot.tire.kmOnAssign : vehicleKm;
+    const kmTraveled = vehicleKm - kmOnAssign;
+    return tireKm + (kmTraveled > 0 ? kmTraveled : 0);
+  });
   
   // Check if any tire has over 200,000 km (critical)
-  const hasCriticalTire = assignedTires.some(tire => (tire.tire.km || 0) >= 200000);
+  const hasCriticalTire = currentTireKms.some(km => km >= 200000);
   if (hasCriticalTire) {
     return 'danger';
   }
   
   // Check if any tire has between 150,000-200,000 km (warning)
-  const hasWarningTire = assignedTires.some(tire => {
-    const km = tire.tire.km || 0;
-    return km >= 150000 && km < 200000;
-  });
+  const hasWarningTire = currentTireKms.some(km => km >= 150000 && km < 200000);
   if (hasWarningTire) {
     return 'warning';
   }
@@ -81,34 +92,25 @@ document.addEventListener("DOMContentLoaded", async () => {
   
   await loadTrucks()
   
-  // Set up real-time listener for truck updates
+  // --- OPTIMIZATION: Use more efficient real-time listeners ---
   DatabaseService.onTrucksUpdate(async (updatedTrucks) => {
-    trucks = updatedTrucks
-    
-    // Pre každé auto načítam sloty a vypočítam aktuálny počet pneumatík a status
-    for (let truck of trucks) {
-      try {
-        const slots = await DatabaseService.getTireSlots('truck', truck.id)
-        const assignedCount = slots.filter(slot => slot.tire).length
-        const totalSlots = slots.length
-        
-        // Aktualizujem truck objekt s aktuálnymi hodnotami
-        truck.tiresAssigned = assignedCount
-        truck.totalTires = totalSlots
-        
-        // Vypočítam status podľa kilometrov pneumatík
-        truck.status = calculateVehicleStatus(slots)
-      } catch (error) {
-        console.error(`Error loading slots for truck ${truck.id}:`, error)
-        truck.tiresAssigned = 0
-        truck.totalTires = 6 // Predvolený počet slotov
-        truck.status = 'good' // Predvolený status
-      }
-    }
-    
-    renderTrucks()
-    updateStats()
-  })
+    trucks = updatedTrucks;
+    // No need to re-fetch all data, just re-process with existing KMs and slots
+    processTruckData();
+    renderTrucks();
+    updateStats();
+  });
+
+  DatabaseService.onAllVehicleKmsUpdate((updatedKms) => {
+    allKms = updatedKms;
+    processTruckData();
+    renderTrucks();
+    updateStats();
+  });
+
+  // Note: A listener for all truck_slots would be needed for full real-time status updates
+  // This would require a change in how slots are stored (e.g., as a subcollection).
+  // For now, a page refresh is needed to see status changes from tire assignments.
 })
 
 function renderTrucks() {
@@ -126,6 +128,13 @@ function updateStats() {
   goodCount.textContent = `${good} Dobrý`
   warningCount.textContent = `${warning} Pozor`
   dangerCount.textContent = `${danger} Kritické`
+}
+
+function formatLicensePlate(plate) {
+  if (plate && plate.length === 7) {
+    return `${plate.slice(0, 2)} ${plate.slice(2, 5)} ${plate.slice(5, 7)}`;
+  }
+  return plate;
 }
 
 function getStatusText(status) {
@@ -155,7 +164,7 @@ function createTruckCard(truck) {
                         </svg>
                     </div>
                     <div class="vehicle-details">
-                        <h3>${truck.licensePlate}</h3>
+                        <h3>${formatLicensePlate(truck.licensePlate)}</h3>
                         <div class="vehicle-meta">
                             <span>${truck.tiresAssigned}/${truck.totalTires} pneumatík</span>
                         </div>

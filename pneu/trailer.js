@@ -5,6 +5,8 @@ if (localStorage.getItem("isLoggedIn") !== "true") {
 
 // Global trailers array
 let trailers = []
+let allKms = {}
+let allSlots = {}
 
 // DOM elements
 let trailerGrid, goodCount, warningCount, dangerCount
@@ -12,28 +14,18 @@ let trailerGrid, goodCount, warningCount, dangerCount
 // Load trailers from database
 async function loadTrailers() {
   try {
-    trailers = await DatabaseService.getTrailers()
-    
-    // Pre každý príves načítam sloty a vypočítam aktuálny počet pneumatík a status
-    for (let trailer of trailers) {
-      try {
-        const slots = await DatabaseService.getTireSlots('trailer', trailer.id)
-        const assignedCount = slots.filter(slot => slot.tire).length
-        const totalSlots = slots.length
-        
-        // Aktualizujem trailer objekt s aktuálnymi hodnotami
-        trailer.tiresAssigned = assignedCount
-        trailer.totalTires = totalSlots
-        
-        // Vypočítam status podľa kilometrov pneumatík
-        trailer.status = calculateVehicleStatus(slots)
-      } catch (error) {
-        console.error(`Error loading slots for trailer ${trailer.id}:`, error)
-        trailer.tiresAssigned = 0
-        trailer.totalTires = 6 // Predvolený počet slotov
-        trailer.status = 'good' // Predvolený status
-      }
-    }
+    // --- OPTIMIZATION: Load all data in parallel ---
+    const [trailersData, kmsData, slotsData] = await Promise.all([
+      DatabaseService.getTrailers(),
+      DatabaseService.getAllVehicleKms(),
+      DatabaseService.getAllTireSlots('trailer')
+    ]);
+
+    trailers = trailersData;
+    allKms = kmsData;
+    allSlots = slotsData;
+
+    processTrailerData();
     
     renderTrailers()
     updateStats()
@@ -44,25 +36,44 @@ async function loadTrailers() {
   }
 }
 
+// --- OPTIMIZATION: Centralized data processing ---
+function processTrailerData() {
+  trailers.forEach(trailer => {
+    const vehicleKm = allKms[trailer.id] || 0;
+    const slots = allSlots[trailer.id] || [];
+    const assignedCount = slots.filter(slot => slot.tire).length;
+    const totalSlots = slots.length > 0 ? slots.length : 6; // Default to 6 if no slots defined
+
+    trailer.kilometers = vehicleKm;
+    trailer.tiresAssigned = assignedCount;
+    trailer.totalTires = totalSlots;
+    trailer.status = calculateVehicleStatus(slots, vehicleKm);
+  });
+}
+
 // Calculate vehicle status based on tire kilometers
-function calculateVehicleStatus(vehicleSlots) {
-  const assignedTires = vehicleSlots.filter(slot => slot.tire && slot.tire.km !== undefined);
+function calculateVehicleStatus(vehicleSlots, vehicleKm) {
+  const assignedTires = vehicleSlots.filter(slot => slot.tire);
   
   if (assignedTires.length === 0) {
     return 'unknown'; // No tires assigned, status is unknown
   }
+
+  const currentTireKms = assignedTires.map(slot => {
+    const tireKm = slot.tire.km || 0;
+    const kmOnAssign = slot.tire.kmOnAssign !== undefined ? slot.tire.kmOnAssign : vehicleKm;
+    const kmTraveled = vehicleKm - kmOnAssign;
+    return tireKm + (kmTraveled > 0 ? kmTraveled : 0);
+  });
   
   // Check if any tire has over 200,000 km (critical)
-  const hasCriticalTire = assignedTires.some(tire => (tire.tire.km || 0) >= 200000);
+  const hasCriticalTire = currentTireKms.some(km => km >= 200000);
   if (hasCriticalTire) {
     return 'danger';
   }
   
   // Check if any tire has between 150,000-200,000 km (warning)
-  const hasWarningTire = assignedTires.some(tire => {
-    const km = tire.tire.km || 0;
-    return km >= 150000 && km < 200000;
-  });
+  const hasWarningTire = currentTireKms.some(km => km >= 150000 && km < 200000);
   if (hasWarningTire) {
     return 'warning';
   }
@@ -81,34 +92,20 @@ document.addEventListener("DOMContentLoaded", async () => {
   
   await loadTrailers()
   
-  // Set up real-time listener for trailer updates
+  // --- OPTIMIZATION: Use more efficient real-time listeners ---
   DatabaseService.onTrailersUpdate(async (updatedTrailers) => {
-    trailers = updatedTrailers
-    
-    // Pre každý príves načítam sloty a vypočítam aktuálny počet pneumatík a status
-    for (let trailer of trailers) {
-      try {
-        const slots = await DatabaseService.getTireSlots('trailer', trailer.id)
-        const assignedCount = slots.filter(slot => slot.tire).length
-        const totalSlots = slots.length
-        
-        // Aktualizujem trailer objekt s aktuálnymi hodnotami
-        trailer.tiresAssigned = assignedCount
-        trailer.totalTires = totalSlots
-        
-        // Vypočítam status podľa kilometrov pneumatík
-        trailer.status = calculateVehicleStatus(slots)
-      } catch (error) {
-        console.error(`Error loading slots for trailer ${trailer.id}:`, error)
-        trailer.tiresAssigned = 0
-        trailer.totalTires = 6 // Predvolený počet slotov
-        trailer.status = 'good' // Predvolený status
-      }
-    }
-    
-    renderTrailers()
-    updateStats()
-  })
+    trailers = updatedTrailers;
+    processTrailerData();
+    renderTrailers();
+    updateStats();
+  });
+
+  DatabaseService.onAllVehicleKmsUpdate((updatedKms) => {
+    allKms = updatedKms;
+    processTrailerData();
+    renderTrailers();
+    updateStats();
+  });
 })
 
 function renderTrailers() {
@@ -126,6 +123,13 @@ function updateStats() {
   goodCount.textContent = `${good} V poriadku`
   warningCount.textContent = `${warning} Pozor`
   dangerCount.textContent = `${danger} Kritické`
+}
+
+function formatLicensePlate(plate) {
+  if (plate && plate.length === 7) {
+    return `${plate.slice(0, 2)} ${plate.slice(2, 5)} ${plate.slice(5, 7)}`;
+  }
+  return plate;
 }
 
 function getStatusText(status) {
@@ -155,7 +159,7 @@ function createTrailerCard(trailer) {
                         </svg>
                     </div>
                     <div class="vehicle-details">
-                        <h3>${trailer.licensePlate}</h3>
+                        <h3>${formatLicensePlate(trailer.licensePlate)}</h3>
                         <div class="vehicle-meta">
                             <span>${trailer.tiresAssigned}/${trailer.totalTires} pneumatík</span>
                         </div>

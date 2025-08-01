@@ -21,10 +21,11 @@ const DatabaseService = {
       const snapshot = await db.collection('tires').get();
       return snapshot.docs.map(doc => {
         const data = doc.data();
-        return { 
+        return {
           id: doc.id, // Firebase document ID
           customId: data.customId || data.id, // Custom ID alebo fallback na staré id
-          ...data 
+          ...data,
+          status: data.status || 'available', // Default to available
         };
       });
     } catch (error) {
@@ -78,8 +79,9 @@ const DatabaseService = {
 
   async addTruck(truck) {
     try {
-      const docRef = await db.collection('trucks').add(truck);
-      return { id: docRef.id, ...truck };
+      const truckId = truck.licensePlate.replace(/\s/g, '');
+      await db.collection('trucks').doc(truckId).set(truck);
+      return { id: truckId, ...truck };
     } catch (error) {
       console.error('Error adding truck:', error);
       throw error;
@@ -117,8 +119,9 @@ const DatabaseService = {
 
   async addTrailer(trailer) {
     try {
-      const docRef = await db.collection('trailers').add(trailer);
-      return { id: docRef.id, ...trailer };
+      const trailerId = trailer.licensePlate.replace(/\s/g, '');
+      await db.collection('trailers').doc(trailerId).set(trailer);
+      return { id: trailerId, ...trailer };
     } catch (error) {
       console.error('Error adding trailer:', error);
       throw error;
@@ -249,8 +252,71 @@ const DatabaseService = {
         callback([]);
       }
     });
+  },
+
+  // Vehicle kilometers
+  async getVehicleKm(vehicleId) {
+    try {
+      const doc = await db.collection('vehicles_km').doc(vehicleId).get();
+      if (doc.exists) {
+        return doc.data().kilometers;
+      }
+      return null;
+    } catch (error) {
+      console.error('Error getting vehicle kilometers:', error);
+      return null;
+    }
+  },
+
+  onVehicleKmUpdate(vehicleId, callback) {
+    return db.collection('vehicles_km').doc(vehicleId).onSnapshot(snapshot => {
+      if (snapshot.exists) {
+        callback(snapshot.data().kilometers);
+      } else {
+        callback(null);
+      }
+    });
+  },
+
+  // --- OPTIMIZATIONS ---
+  async getAllVehicleKms() {
+    try {
+      const snapshot = await db.collection('vehicles_km').get();
+      const kms = {};
+      snapshot.docs.forEach(doc => {
+        kms[doc.id] = doc.data().kilometers;
+      });
+      return kms;
+    } catch (error) {
+      console.error('Error getting all vehicle kilometers:', error);
+      return {};
+    }
+  },
+
+  async getAllTireSlots(vehicleType) {
+    try {
+      const snapshot = await db.collection(`${vehicleType}_slots`).get();
+      const allSlots = {};
+      snapshot.docs.forEach(doc => {
+        allSlots[doc.id] = doc.data().slots || [];
+      });
+      return allSlots;
+    } catch (error) {
+      console.error(`Error getting all ${vehicleType} tire slots:`, error);
+      return {};
+    }
+  },
+
+  onAllVehicleKmsUpdate(callback) {
+    return db.collection('vehicles_km').onSnapshot(snapshot => {
+      const kms = {};
+      snapshot.docs.forEach(doc => {
+        kms[doc.id] = doc.data().kilometers;
+      });
+      callback(kms);
+    });
   }
 };
 
 // Export for use in other files
-window.DatabaseService = DatabaseService; 
+window.DatabaseService = DatabaseService;
