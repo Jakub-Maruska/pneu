@@ -1273,6 +1273,11 @@ body {
   font-size: 0.95em;
   font-weight: 600;
   box-shadow: 0 2px 4px rgba(16, 185, 129, 0.3);
+  padding: 0.25em 0.75em;
+  border-radius: 1em;
+  margin-left: 0.5rem;
+  display: inline-block;
+  vertical-align: middle;
 }
 .badge-dot {
   background: #dcfce7;
@@ -1431,7 +1436,7 @@ body {
   border: 1.5px solid #e5e7eb;
   border-radius: 0.5em;
   padding: 0.45em 0.5em;
-  font-size: 1em;
+  font-size: 0.9em;
   font-weight: 600;
   cursor: pointer;
   background: #fff;

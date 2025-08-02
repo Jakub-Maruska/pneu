@@ -411,8 +411,10 @@ assignModal.addEventListener("click", (e) => {
 function addDragAndDropListeners() {
     const slots = document.querySelectorAll('.tire-slot-card');
     let draggedItem = null;
+    let touchDraggedItem = null;
 
     slots.forEach(slot => {
+        // Mouse events
         slot.addEventListener('dragstart', (e) => {
             const tireCard = e.target.closest('.assigned-tire-new');
             if (tireCard) {
@@ -460,6 +462,46 @@ function addDragAndDropListeners() {
                 if (fromSlotId !== toSlotId) {
                     await swapTires(fromSlotId, toSlotId);
                 }
+            }
+        });
+
+        // Touch events
+        slot.addEventListener('touchstart', (e) => {
+            const tireCard = e.target.closest('.assigned-tire-new');
+            if (tireCard) {
+                touchDraggedItem = e.target.closest('.tire-slot-card');
+                touchDraggedItem.style.opacity = '0.5';
+            }
+        });
+
+        slot.addEventListener('touchmove', (e) => {
+            e.preventDefault();
+            if (touchDraggedItem) {
+                const touch = e.touches[0];
+                const targetSlot = document.elementFromPoint(touch.clientX, touch.clientY)?.closest('.tire-slot-card');
+                slots.forEach(s => s.classList.remove('drag-over'));
+                if (targetSlot && targetSlot !== touchDraggedItem) {
+                    targetSlot.classList.add('drag-over');
+                }
+            }
+        });
+
+        slot.addEventListener('touchend', async (e) => {
+            if (touchDraggedItem) {
+                touchDraggedItem.style.opacity = '1';
+                const touch = e.changedTouches[0];
+                const toSlot = document.elementFromPoint(touch.clientX, touch.clientY)?.closest('.tire-slot-card');
+                slots.forEach(s => s.classList.remove('drag-over'));
+
+                if (toSlot) {
+                    const fromSlotId = touchDraggedItem.dataset.slotId;
+                    const toSlotId = toSlot.dataset.slotId;
+
+                    if (fromSlotId !== toSlotId) {
+                        await swapTires(fromSlotId, toSlotId);
+                    }
+                }
+                touchDraggedItem = null;
             }
         });
     });
