@@ -123,6 +123,7 @@ closeAssignModal.addEventListener("click", () => closeAssignModalHandler())
 
 function renderSlots() {
   trailerTires.innerHTML = trailerSlots.map((slot) => createSlotCard(slot)).join("")
+  addDragAndDropListeners()
 }
 
 function getKmStatusClass(km) {
@@ -149,7 +150,7 @@ function createSlotCard(slot) {
     const kmStatusClass = getKmStatusClass(currentKm);
 
     return `
-        <div class="tire-slot-card">
+        <div class="tire-slot-card" data-slot-id="${slot.id}">
             <div class="tire-slot-header">
                 <h3>${slot.position}</h3>
             </div>
@@ -157,7 +158,7 @@ function createSlotCard(slot) {
                 ${
                   isAssigned
                     ? `
-                    <div class="assigned-tire-new">
+                    <div class="assigned-tire-new" draggable="true">
                         <div class="tire-brand-new">${slot.tire.brand} <strong>${slot.tire.type}</strong></div>
                         <div class="tire-size-new">${slot.tire.size}</div>
                         <div class="tire-details-grid-new">
@@ -401,3 +402,85 @@ assignModal.addEventListener("click", (e) => {
     closeAssignModalHandler()
   }
 })
+
+function addDragAndDropListeners() {
+    const slots = document.querySelectorAll('.tire-slot-card');
+    let draggedItem = null;
+
+    slots.forEach(slot => {
+        slot.addEventListener('dragstart', (e) => {
+            const tireCard = e.target.closest('.assigned-tire-new');
+            if (tireCard) {
+                draggedItem = e.target.closest('.tire-slot-card');
+                setTimeout(() => {
+                    if (draggedItem) {
+                        draggedItem.style.opacity = '0.5';
+                    }
+                }, 0);
+            } else {
+                e.preventDefault();
+            }
+        });
+
+        slot.addEventListener('dragend', () => {
+            if (draggedItem) {
+                draggedItem.style.opacity = '1';
+                draggedItem = null;
+            }
+        });
+
+        slot.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            const targetSlot = e.target.closest('.tire-slot-card');
+            if (targetSlot && targetSlot !== draggedItem) {
+                targetSlot.classList.add('drag-over');
+            }
+        });
+
+        slot.addEventListener('dragleave', (e) => {
+            const targetSlot = e.target.closest('.tire-slot-card');
+            if (targetSlot) {
+                targetSlot.classList.remove('drag-over');
+            }
+        });
+
+        slot.addEventListener('drop', async (e) => {
+            e.preventDefault();
+            const toSlot = e.target.closest('.tire-slot-card');
+            if (draggedItem && toSlot) {
+                toSlot.classList.remove('drag-over');
+                const fromSlotId = draggedItem.dataset.slotId;
+                const toSlotId = toSlot.dataset.slotId;
+
+                if (fromSlotId !== toSlotId) {
+                    await swapTires(fromSlotId, toSlotId);
+                }
+            }
+        });
+    });
+}
+
+async function swapTires(fromSlotId, toSlotId) {
+    const fromSlotIndex = trailerSlots.findIndex(s => s.id === fromSlotId);
+    const toSlotIndex = trailerSlots.findIndex(s => s.id === toSlotId);
+
+    if (fromSlotIndex !== -1 && toSlotIndex !== -1) {
+        const fromTire = trailerSlots[fromSlotIndex].tire;
+        const toTire = trailerSlots[toSlotIndex].tire;
+
+        // Swap tires
+        trailerSlots[fromSlotIndex].tire = toTire;
+        trailerSlots[toSlotIndex].tire = fromTire;
+
+        try {
+            await DatabaseService.updateTireSlots('trailer', trailerId, trailerSlots);
+            // The real-time listener will re-render the slots
+        } catch (error) {
+            console.error('Error swapping tires:', error);
+            // Revert the swap in case of an error
+            trailerSlots[fromSlotIndex].tire = fromTire;
+            trailerSlots[toSlotIndex].tire = toTire;
+            renderSlots();
+        }
+    }
+}

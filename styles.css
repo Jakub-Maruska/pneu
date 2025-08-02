@@ -492,8 +492,18 @@ body {
 }
 
 .delete-btn:hover {
-  background: #fef2f2;
+  background: #fee2e2;
   border-color: #fca5a5;
+}
+
+.move-btn {
+  border-color: #e0e7ff;
+  color: #4f46e5;
+}
+
+.move-btn:hover {
+  background: #eef2ff;
+  border-color: #c7d2fe;
 }
 
 .status-badge-small {
@@ -711,6 +721,11 @@ body {
     flex-direction: column;
     overflow: hidden;
     transition: all 0.3s;
+}
+
+.tire-slot-card.drag-over {
+    border-color: #3b82f6;
+    background-color: #eff6ff;
 }
 
 .tire-slot-header {

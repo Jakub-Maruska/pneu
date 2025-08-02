@@ -32,7 +32,7 @@
                             </div>
                             <div class="header-stats">
                                 <div class="stat-item">
-                                    <div class="stat-dot available"></div>
+                                    <div class="stat-dot good"></div>
                                     <span id="availableCount">0 Dostupné</span>
                                 </div>
                                 <div class="stat-item">
@@ -202,6 +202,32 @@
                 </button>
             </div>
             <div id="groupDetailList" style="padding: 1.5rem;"></div>
+        </div>
+    </div>
+
+    <!-- Move Tire Modal -->
+    <div id="moveTireModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="moveTireModalTitle">Presunúť pneumatiku</h3>
+                <button class="close-btn" id="closeMoveTireModal">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"/>
+                        <line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body" style="padding: 1.5rem;">
+                <p style="text-align: center; margin-bottom: 1.5rem;">Kam chcete presunúť pneumatiku <strong id="moveTireIdDisplay"></strong>?</p>
+                <div class="storage-options">
+                    <button class="storage-option-btn" data-status="available">Sklad</button>
+                    <button class="storage-option-btn" data-status="forSale">Predaj</button>
+                    <button class="storage-option-btn" data-status="disposed">Vyhodené</button>
+                </div>
+                <div style="text-align: center; margin-top: 1.5rem;">
+                    <button id="cancelMoveTire" class="btn-secondary">Zrušiť</button>
+                </div>
+            </div>
         </div>
     </div>
 
