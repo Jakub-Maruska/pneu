@@ -412,6 +412,8 @@ function addDragAndDropListeners() {
     const slots = document.querySelectorAll('.tire-slot-card');
     let draggedItem = null;
     let touchDraggedItem = null;
+    let longPressTimer = null;
+    let isDragging = false;
 
     slots.forEach(slot => {
         // Mouse events
@@ -469,25 +471,31 @@ function addDragAndDropListeners() {
         slot.addEventListener('touchstart', (e) => {
             const tireCard = e.target.closest('.assigned-tire-new');
             if (tireCard) {
-                touchDraggedItem = e.target.closest('.tire-slot-card');
-                touchDraggedItem.style.opacity = '0.5';
+                longPressTimer = setTimeout(() => {
+                    isDragging = true;
+                    touchDraggedItem = e.target.closest('.tire-slot-card');
+                    touchDraggedItem.style.opacity = '0.5';
+                }, 300); // 300ms for long press
             }
         });
 
         slot.addEventListener('touchmove', (e) => {
-            e.preventDefault();
-            if (touchDraggedItem) {
+            if (isDragging) {
+                e.preventDefault();
                 const touch = e.touches[0];
                 const targetSlot = document.elementFromPoint(touch.clientX, touch.clientY)?.closest('.tire-slot-card');
                 slots.forEach(s => s.classList.remove('drag-over'));
                 if (targetSlot && targetSlot !== touchDraggedItem) {
                     targetSlot.classList.add('drag-over');
                 }
+            } else {
+                clearTimeout(longPressTimer);
             }
         });
 
         slot.addEventListener('touchend', async (e) => {
-            if (touchDraggedItem) {
+            clearTimeout(longPressTimer);
+            if (isDragging && touchDraggedItem) {
                 touchDraggedItem.style.opacity = '1';
                 const touch = e.changedTouches[0];
                 const toSlot = document.elementFromPoint(touch.clientX, touch.clientY)?.closest('.tire-slot-card');
@@ -501,8 +509,18 @@ function addDragAndDropListeners() {
                         await swapTires(fromSlotId, toSlotId);
                     }
                 }
-                touchDraggedItem = null;
             }
+            isDragging = false;
+            touchDraggedItem = null;
+        });
+
+        slot.addEventListener('touchcancel', () => {
+            clearTimeout(longPressTimer);
+            if (touchDraggedItem) {
+                touchDraggedItem.style.opacity = '1';
+            }
+            isDragging = false;
+            touchDraggedItem = null;
         });
     });
 }
