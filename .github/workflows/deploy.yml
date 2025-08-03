@@ -8,6 +8,8 @@ on:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write # Udelenie oprávnení na zápis do repozitára
     steps:
       - name: Checkout
         uses: actions/checkout@v3
