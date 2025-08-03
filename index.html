@@ -22,20 +22,16 @@
                             <polyline points="10,9 9,9 8,9"/>
                         </svg>
                     </div>
-                    <h1>Správca Pneumatík Pro</h1>
-                    <p>Profesionálne riadenie flotily</p>
+                    <h1>Správca Pneumatík</h1>
+                    <p></p>
                 </div>
             </div>
             
             <div class="login-form">
                 <form id="loginForm">
                     <div class="form-group">
-                        <label for="username">Používateľské meno</label>
-                        <input type="text" id="username" name="username" placeholder="Zadajte používateľské meno" required>
-                    </div>
-                    <div class="form-group">
                         <label for="password">Heslo</label>
-                        <input type="password" id="password" name="password" placeholder="Zadajte heslo" required>
+                        <input type="password" id="password" name="password" placeholder="Zadajte Heslo" required>
                     </div>
                     <button type="submit" class="login-btn">
                         <span>Prihlásiť sa</span>
@@ -52,17 +48,23 @@
         </div>
     </div>
 
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
+    <script src="firebase-config.js"></script>
+
     <script>
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
             e.preventDefault();
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
+            const enteredPassword = document.getElementById('password').value;
             
-            // Simple validation (in real app, this would be server-side)
-            if (username && password) {
+            const correctPassword = await DatabaseService.getAuthPassword();
+
+            if (enteredPassword === correctPassword) {
                 localStorage.setItem('isLoggedIn', 'true');
-                localStorage.setItem('username', username);
                 window.location.href = 'pneu/storage.html';
+            } else {
+                alert('Nesprávne heslo!');
             }
         });
 

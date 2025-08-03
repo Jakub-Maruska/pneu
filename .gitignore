@@ -88,4 +88,7 @@ logs
 
 # Temporary files
 *.tmp
-*.temp 
+*.temp
+
+# Local configuration files
+firebase-config.js

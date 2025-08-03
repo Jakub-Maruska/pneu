@@ -315,6 +315,22 @@ const DatabaseService = {
       });
       callback(kms);
     });
+  },
+
+  async getAuthPassword() {
+    try {
+      const doc = await db.collection('settings').doc('auth').get();
+      if (doc.exists && doc.data().password) {
+        return doc.data().password;
+      }
+      // If password is not found, return null. No fallback.
+      console.error("CRITICAL: Password not configured Login will be disabled until it is set.");
+      return null;
+    } catch (error) {
+      console.error('Error getting auth password:', error);
+      // Return null in case of error to prevent login failures.
+      return null;
+    }
   }
 };
 

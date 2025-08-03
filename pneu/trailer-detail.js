@@ -122,95 +122,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 closeAssignModal.addEventListener("click", () => closeAssignModalHandler())
 
 function renderSlots() {
-    const tireGroups = groupTires(trailerSlots);
-    const tireGroupsContainer = document.getElementById('tireGroupsContainer');
-
-    if (tireGroupsContainer) {
-        tireGroupsContainer.innerHTML = Object.entries(tireGroups).map(([groupKey, group]) => {
-            return createTireGroupCard(groupKey, group.tires);
-        }).join('');
-    }
-
-    // Hide the old container if it's empty
-    const trailerTiresContainer = document.getElementById('trailerTires');
-    if (trailerTiresContainer) {
-        const unassignedSlots = trailerSlots.filter(slot => !slot.tire);
-        if (unassignedSlots.length > 0) {
-            trailerTiresContainer.innerHTML = unassignedSlots.map(slot => createSlotCard(slot)).join('');
-            trailerTiresContainer.style.display = '';
-        } else {
-            trailerTiresContainer.style.display = 'none';
-        }
-    }
-
+    trailerTires.innerHTML = trailerSlots.map(slot => createSlotCard(slot)).join('');
     addDragAndDropListeners();
-}
-
-function groupTires(slots) {
-    const groups = {};
-    slots.forEach(slot => {
-        if (slot.tire) {
-            const key = `${slot.tire.brand}-${slot.tire.type}-${slot.tire.size}`;
-            if (!groups[key]) {
-                groups[key] = {
-                    brand: slot.tire.brand,
-                    type: slot.tire.type,
-                    size: slot.tire.size,
-                    tires: []
-                };
-            }
-            groups[key].tires.push({ ...slot.tire, position: slot.position, slotId: slot.id });
-        }
-    });
-    return groups;
-}
-
-function createTireGroupCard(groupKey, tires) {
-    const { brand, type, size } = tires[0];
-    return `
-        <div class="group-card-container">
-            <div class="group-header-box">
-                <div>
-                    <div class="group-size-main">${brand} <strong>${type}</strong></div>
-                    <div class="group-size-r">${size}</div>
-                </div>
-                <div class="badge-count">${tires.length} ks</div>
-            </div>
-            <div class="group-mobile-list">
-                ${tires.map(tire => createGroupMobileCard(tire)).join('')}
-            </div>
-        </div>
-    `;
-}
-
-function createGroupMobileCard(tire) {
-    const vehicleKm = trailer.kilometers || 0;
-    const tireKm = tire.km || 0;
-    const kmOnAssign = tire.kmOnAssign !== undefined ? tire.kmOnAssign : vehicleKm;
-    const kmTraveled = vehicleKm - kmOnAssign;
-    const currentKm = tireKm + (kmTraveled > 0 ? kmTraveled : 0);
-
-    return `
-        <div class="group-mobile-card">
-            <div class="group-mobile-row">
-                <span class="group-mobile-label">ID:</span>
-                <span class="group-mobile-id">${tire.customId || tire.id}</span>
-            </div>
-            <div class="group-mobile-row">
-                <span class="group-mobile-label">DOT:</span>
-                <span class="group-mobile-dot">${tire.dot || '-'}</span>
-            </div>
-            <div class="group-mobile-row">
-                <span class="group-mobile-label">Najazdené km:</span>
-                <span class="group-mobile-km">${formatKm(currentKm)}</span>
-            </div>
-            <div class="group-mobile-actions">
-                <button class="group-mobile-btn edit" onclick="openEditTireModal('${tire.id}')">Upraviť</button>
-                <button class="group-mobile-btn delete" onclick="removeTire('${tire.slotId}')">Vymazať</button>
-                <button class="group-mobile-btn" onclick="openMoveTireModal('${tire.slotId}')">Presunúť</button>
-            </div>
-        </div>
-    `;
 }
 
 function getKmStatusClass(km) {
@@ -285,7 +198,7 @@ function createSlotCard(slot) {
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
                     </svg>
-                    Odobrať
+                    <span>Odobrať</span>
                 </button>
             `
                 : ``

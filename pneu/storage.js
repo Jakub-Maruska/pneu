@@ -82,6 +82,9 @@ filterSearch.addEventListener("input", renderTires)
 // Modal handlers
 function openModal(tire = null) {
   editingTire = tire
+  const currentDotDisplay = document.getElementById("currentDotDisplay")
+  const tireDotInput = document.getElementById("tireDot")
+
   if (tire) {
     modalTitle.textContent = "Upraviť pneumatiku"
     submitText.textContent = "Aktualizovať pneumatiku"
@@ -89,13 +92,24 @@ function openModal(tire = null) {
     document.getElementById("tireType").value = tire.type
     document.getElementById("tireSize").value = tire.size
     document.getElementById("tireId").value = tire.customId || tire.id
-    document.getElementById("tireDot").value = tire.dot || ""
     document.getElementById("tireKm").value = tire.km ?? 0
+    
+    // DOT handling
+    if (tire.dot) {
+      currentDotDisplay.textContent = `(Aktuálny: ${tire.dot})`
+    } else {
+      currentDotDisplay.textContent = ""
+    }
+    tireDotInput.value = "" // Clear input for new WWYY
+    tireDotInput.required = false // Not required when editing
+
   } else {
     modalTitle.textContent = "Pridať novú pneumatiku"
     submitText.textContent = "Pridať pneumatiku"
     tireForm.reset()
     document.getElementById("tireKm").value = "0"
+    currentDotDisplay.textContent = ""
+    tireDotInput.required = true // Required for new tires
   }
   tireModal.classList.add("active")
   
@@ -123,17 +137,45 @@ function closeModalHandler() {
   }
 }
 
+function convertDotToDate(dotValue) {
+  if (!/^\d{4}$/.test(dotValue)) {
+    return null; // Invalid format
+  }
+  const week = parseInt(dotValue.substring(0, 2), 10);
+  const year = parseInt(dotValue.substring(2, 4), 10) + 2000;
+
+  if (week < 1 || week > 53) {
+    return null; // Invalid week
+  }
+
+  // Calculate month (approximation)
+  const month = Math.ceil(week / 4.345);
+  return `${String(month).padStart(2, '0')}/${year}`;
+}
+
 async function handleSubmit(e) {
   e.preventDefault()
   const brand = document.getElementById("tireBrand").value
   const type = document.getElementById("tireType").value
   let size = document.getElementById("tireSize").value
   const id = document.getElementById("tireId").value
-  const dot = document.getElementById("tireDot").value
+  const dotInput = document.getElementById("tireDot").value
   const km = parseInt(document.getElementById("tireKm").value) || 0
 
-  // Automatické formátovanie rozmeru už je spracované v event listeneri
-  // size je už formátovaný z input eventu
+  let dot = editingTire ? editingTire.dot : null;
+
+  if (dotInput) {
+    const convertedDot = convertDotToDate(dotInput);
+    if (convertedDot) {
+      dot = convertedDot;
+    } else {
+      alert("Neplatný formát DOT. Zadajte 4 číslice v tvare WWYY (napr. 1424).");
+      return;
+    }
+  } else if (!editingTire) {
+    alert("DOT je povinný údaj pre nové pneumatiky.");
+    return;
+  }
 
   try {
     if (editingTire) {
@@ -602,28 +644,12 @@ storageOptionBtns.forEach(btn => {
 
 // Rýchle predvyplnenie údajov z group detailu
 globalThis.prefillFromGroup = function(brand, type, size) {
+  openModal(); // Open a fresh modal
   document.getElementById("tireBrand").value = decodeURIComponent(brand)
   document.getElementById("tireType").value = decodeURIComponent(type)
   document.getElementById("tireSize").value = decodeURIComponent(size)
-  tireModal.classList.add("active")
   groupDetailModal.classList.remove("active")
-  document.getElementById("tireId").value = ""
-  document.getElementById("tireDot").value = ""
-  document.getElementById("tireKm").value = "0"
-  editingTire = null
-  modalTitle.textContent = "Pridať novú pneumatiku"
-  submitText.textContent = "Pridať pneumatiku"
-  
-  // Znovu nastaví event listener pre formátovanie rozmeru
-  const tireSizeInput = document.getElementById("tireSize")
-  if (tireSizeInput) {
-    // Odstráni existujúci listener ak existuje
-    tireSizeInput.removeEventListener("input", formatTireSize)
-    // Pridá nový listener
-    tireSizeInput.addEventListener("input", formatTireSize)
-    // Inicializuje lastLength
-    tireSizeInput.dataset.lastLength = "0"
-  }
+  document.getElementById("tireId").focus();
 }
 
 // Close modal when clicking outside
