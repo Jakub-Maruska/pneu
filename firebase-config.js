@@ -342,4 +342,4 @@ const DatabaseService = {
 };
 
 // Export for use in other files
-window.DatabaseService = DatabaseService;
+export { DatabaseService };

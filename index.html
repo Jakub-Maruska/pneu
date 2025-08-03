@@ -51,26 +51,34 @@
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
-    <script src="firebase-config.js"></script>
+    
+    <script type="module">
+        import { DatabaseService } from '/firebase-config.js';
 
-    <script>
-        document.getElementById('loginForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            const enteredPassword = document.getElementById('password').value;
-            
-            const correctPassword = await DatabaseService.getAuthPassword();
-
-            if (enteredPassword === correctPassword) {
-                localStorage.setItem('isLoggedIn', 'true');
-                window.location.href = 'pneu/storage.html';
-            } else {
-                alert('Nesprávne heslo!');
-            }
-        });
-
-        // Check if already logged in
+        // Check if already logged in and redirect
         if (localStorage.getItem('isLoggedIn') === 'true') {
-            window.location.href = 'pneu/storage.html';
+            window.location.href = '/pneu/storage.html';
+            // Stop further execution if redirecting
+        } else {
+            // Only set up the form if the user is not logged in
+            document.getElementById('loginForm').addEventListener('submit', async function(e) {
+                e.preventDefault();
+                const enteredPassword = document.getElementById('password').value;
+                
+                try {
+                    const correctPassword = await DatabaseService.getAuthPassword();
+
+                    if (correctPassword && enteredPassword === correctPassword) {
+                        localStorage.setItem('isLoggedIn', 'true');
+                        window.location.href = '/pneu/storage.html';
+                    } else {
+                        alert('Nesprávne heslo!');
+                    }
+                } catch (error) {
+                    console.error("Login error:", error);
+                    alert('Chyba pri prihlasovaní. Skúste to znova.');
+                }
+            });
         }
     </script>
 </body>

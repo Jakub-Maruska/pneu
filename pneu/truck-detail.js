@@ -1,3 +1,5 @@
+import { DatabaseService } from "/firebase-config.js";
+
 // Check authentication
 if (localStorage.getItem("isLoggedIn") !== "true") {
   window.location.href = "../index.html"
