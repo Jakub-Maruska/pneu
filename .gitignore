@@ -90,4 +90,5 @@ logs
 *.tmp
 *.temp
 
-# Local configuration files
+
+.env

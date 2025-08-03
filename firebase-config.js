@@ -1,28 +1,22 @@
-// Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyAEV9VCbQOFA763ULbg2H9N7YPONHFo9ys",
-  authDomain: "pneu-ee1d6.firebaseapp.com",
-  projectId: "pneu-ee1d6",
-  storageBucket: "pneu-ee1d6.firebasestorage.app",
-  messagingSenderId: "703642287813",
-  appId: "1:703642287813:web:e5a25fe039e09883cb7aac",
-  measurementId: "G-5Z9VW7RB1F"
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
 };
 
-// Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 
-// Initialize App Check
+// App Check s reCAPTCHA kľúčom z .env
 const appCheck = firebase.appCheck();
 appCheck.activate(
-  // You can get your reCAPTCHA v3 site key from the Firebase console.
-  new firebase.appCheck.ReCaptchaV3Provider('YOUR_RECAPTCHA_V3_SITE_KEY'),
-  {
-    // Set to true to only allow valid App Check tokens.
-    // Set to false for testing locally.
-    isTokenAutoRefreshEnabled: true
-  }
+  new firebase.appCheck.ReCaptchaV3Provider(import.meta.env.VITE_RECAPTCHA_SITE_KEY),
+  { isTokenAutoRefreshEnabled: true }
 );
+
 
 const db = firebase.firestore();
 
