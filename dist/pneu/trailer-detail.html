@@ -3,10 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Prívesy - Správca Pneumatík Pro</title>
-    <link rel="manifest" href="../manifest.json">
-    <link rel="stylesheet" href="../styles.css">
+    <title>Detail prívesu - Správca Pneumatík Pro</title>
+    <link rel="manifest" href="/assets/manifest-Z5lQ8e_Z.json">
     <meta name="theme-color" content="#10b981">
+  <script type="module" crossorigin src="/assets/trailerDetail-BXZ57ozH.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/firebase-config-Cu0ruEyn.js">
+  <link rel="stylesheet" crossorigin href="/assets/firebase-config-BpJX3GjP.css">
 </head>
 <body>
     <div class="app-container">
@@ -18,6 +20,11 @@
                     <div class="header-content">
                         <div class="header-info">
                             <div class="header-icon-section">
+                                <button class="back-btn" onclick="window.location.href='trailer.html'">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="m15 18-6-6 6-6"/>
+                                    </svg>
+                                </button>
                                 <div class="header-icon trailer-icon">
                                     <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                         <path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/>
@@ -27,31 +34,30 @@
                                         <circle cx="7" cy="18" r="2"/>
                                     </svg>
                                 </div>
-                                <div class="header-text">
-                                    <h1>Flotila prívesov</h1>
-                                    <p>Správa prívesov</p>
-                                </div>
-                            </div>
-                            <div class="header-stats">
+                        <div class="header-text">
+                            <h1><span id="trailerPlate"></span></h1>
+                            <p id="trailerKm"></p>
+                        </div>
+                    </div>
+                    <div class="header-stats">
                                 <div class="stat-item">
-                                    <div class="stat-dot good"></div>
-                                    <span id="goodCount">0 V poriadku</span>
-                                </div>
-                                <div class="stat-item">
-                                    <div class="stat-dot warning"></div>
-                                    <span id="warningCount">0 Pozor</span>
-                                </div>
-                                <div class="stat-item">
-                                    <div class="stat-dot danger"></div>
-                                    <span id="dangerCount">0 Kritické</span>
+                                    <div class="stat-dot available"></div>
+                                    <span id="assignedStatus">0/6 Priradené</span>
                                 </div>
                             </div>
                         </div>
+                        <div class="status-badge" id="completionBadge">Neúplné</div>
                     </div>
                 </div>
 
-                <!-- Trailer List -->
-                <div class="vehicle-grid" id="trailerGrid"></div>
+                <!-- Trailer Tires -->
+                <div class="section">
+                    <div class="section-header">
+                        <div class="section-indicator trailer-indicator"></div>
+                        <h2>Pneumatiky prívesu</h2>
+                    </div>
+                    <div class="tire-slots-grid" id="trailerTires"></div>
+                </div>
             </div>
         </main>
 
@@ -94,11 +100,50 @@
         </nav>
     </div>
 
+    <!-- Tire Assignment Modal -->
+    <div id="assignModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="assignModalTitle">Priradiť pneumatiku</h3>
+                <button class="close-btn" id="closeAssignModal">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"/>
+                        <line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+            <div style="padding: 1.5rem; padding-top: 0.5rem;">
+                <div class="form-group" style="margin-bottom: 1rem;">
+                    <input type="text" id="tireSearchInput" placeholder="Hľadať pneu podľa ID, rozmeru, značky..." style="width: 100%; padding: 0.75rem; border-radius: 0.75rem; border: 1px solid #d1d5db; font-size: 1rem;">
+                </div>
+                <div class="tire-selection" id="tireSelection"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Remove Tire Modal -->
+    <div id="removeTireModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="removeTireModalTitle">Kam presunúť pneumatiku?</h3>
+            </div>
+            <div class="modal-body" style="padding: 1.5rem;">
+                <div class="storage-options">
+                    <button class="storage-option-btn" data-location="Sklad">Sklad</button>
+                    <button class="storage-option-btn" data-location="Predaj">Predaj</button>
+                    <button class="storage-option-btn" data-location="Vyhodne">Vyhodené</button>
+                </div>
+                <div style="text-align: center; margin-top: 1.5rem;">
+                    <button id="cancelRemoveTire" class="btn-secondary">Zrušiť</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
-
+    
     <!-- Main application script -->
-    <script type="module" src="./trailer.js"></script>
 </body>
 </html>

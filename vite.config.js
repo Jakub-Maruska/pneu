@@ -1,7 +1,6 @@
 import { defineConfig } from 'vite';
 
 export default defineConfig({
-  base: '/pneu/', // Názov vášho repozitára na GitHub
   build: {
     rollupOptions: {
       input: {

@@ -3,22 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Prívesy - Správca Pneumatík Pro</title>
-    <link rel="manifest" href="../manifest.json">
-    <link rel="stylesheet" href="../styles.css">
+    <title>Autá - Správca Pneumatík Pro</title>
+    <link rel="manifest" href="/assets/manifest-Z5lQ8e_Z.json">
     <meta name="theme-color" content="#10b981">
+  <script type="module" crossorigin src="/assets/truck-D3HR4dcA.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/firebase-config-Cu0ruEyn.js">
+  <link rel="stylesheet" crossorigin href="/assets/firebase-config-BpJX3GjP.css">
 </head>
 <body>
     <div class="app-container">
         <main class="main-content">
             <div class="page-container">
                 <!-- Header -->
-                <div class="page-header trailer-header">
+                <div class="page-header truck-header">
                     <div class="header-background"></div>
                     <div class="header-content">
                         <div class="header-info">
                             <div class="header-icon-section">
-                                <div class="header-icon trailer-icon">
+                                <div class="header-icon truck-icon">
                                     <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                         <path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/>
                                         <path d="M15 18H9"/>
@@ -28,8 +30,8 @@
                                     </svg>
                                 </div>
                                 <div class="header-text">
-                                    <h1>Flotila prívesov</h1>
-                                    <p>Správa prívesov</p>
+                                    <h1>Flotila áut</h1>
+                                    <p>Správa vozidiel</p>
                                 </div>
                             </div>
                             <div class="header-stats">
@@ -50,15 +52,15 @@
                     </div>
                 </div>
 
-                <!-- Trailer List -->
-                <div class="vehicle-grid" id="trailerGrid"></div>
+                <!-- Truck List -->
+                <div class="vehicle-grid" id="truckGrid"></div>
             </div>
         </main>
 
         <!-- Bottom Navigation -->
         <nav class="bottom-nav">
-            <a href="truck.html" class="nav-item">
-                <div class="nav-icon truck-icon">
+            <a href="truck.html" class="nav-item active">
+                <div class="nav-icon truck-icon active">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/>
                         <path d="M15 18H9"/>
@@ -79,8 +81,8 @@
                 </div>
                 <span>Sklad</span>
             </a>
-            <a href="trailer.html" class="nav-item active">
-                <div class="nav-icon trailer-icon active">
+            <a href="trailer.html" class="nav-item">
+                <div class="nav-icon trailer-icon">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/>
                         <path d="M15 18H9"/>
@@ -99,6 +101,5 @@
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
 
     <!-- Main application script -->
-    <script type="module" src="./trailer.js"></script>
 </body>
 </html>
