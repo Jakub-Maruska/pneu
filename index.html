@@ -6,6 +6,8 @@
     <title>Tire Manager Pro</title>
     <link rel="manifest" href="/pneu/assets/manifest-Z5lQ8e_Z.json">
     <meta name="theme-color" content="#10b981">
+  <script type="module" crossorigin src="/pneu/assets/main-CMeh1me6.js"></script>
+  <link rel="modulepreload" crossorigin href="/pneu/assets/firebase-config-CqFqcOjv.js">
   <link rel="stylesheet" crossorigin href="/pneu/assets/styles-BpJX3GjP.css">
 </head>
 <body>
@@ -51,27 +53,6 @@
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
-    <script src="firebase-config.js"></script>
-
-    <script>
-        document.getElementById('loginForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            const enteredPassword = document.getElementById('password').value;
-            
-            const correctPassword = await DatabaseService.getAuthPassword();
-
-            if (enteredPassword === correctPassword) {
-                localStorage.setItem('isLoggedIn', 'true');
-                window.location.href = 'pneu/storage.html';
-            } else {
-                alert('Nesprávne heslo!');
-            }
-        });
-
-        // Check if already logged in
-        if (localStorage.getItem('isLoggedIn') === 'true') {
-            window.location.href = 'pneu/storage.html';
-        }
-    </script>
+    
 </body>
 </html>
