@@ -91,4 +91,3 @@ logs
 *.temp
 
 # Local configuration files
-firebase-config.js
